@@ -2,8 +2,8 @@ name: arXiv Daily Tracker
 
 on:
   schedule:
-    # 每天北京时间 9:00 运行 (UTC 1:00)
-    - cron: '0 1 * * *'
+    # 每天北京时间 7:30 运行 (UTC 23:30，前一天)
+    - cron: '30 23 * * *'
   workflow_dispatch:
     inputs:
       days:
