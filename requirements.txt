@@ -1,6 +1,6 @@
-arxiv>=2.1.0
 requests>=2.31.0
-pyyaml>=6.0.1
 python-dotenv>=1.0.0
 openai>=1.0.0
 feedparser>=6.0.10
+tqdm>=4.66.0
+tenacity>=8.2.0

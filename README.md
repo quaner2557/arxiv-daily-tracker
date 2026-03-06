@@ -1,109 +1,114 @@
 # arXiv Daily Tracker
 
-每天自动获取 arXiv 最新论文，支持按公司/机构名称和研究方向关键词筛选。
+基于 [paperBotV2](https://github.com/Doragd/Algorithm-Practice-in-Industry/tree/main/paperBotV2) 实现，使用 AI 粗排+精排筛选高质量论文。
 
-## 功能特点
+## 核心特点
 
-- 🔍 **多维度筛选**：支持按公司名称（如 Google, Meta, OpenAI）和研究方向（如 recommendation, search, retrieval）筛选
-- 🤖 **AI 总结**：使用大模型自动总结论文摘要
-- 📧 **多种推送方式**：支持飞书/钉钉/邮件推送
-- ⏰ **定时执行**：GitHub Actions 每天自动运行
-- 💾 **本地运行**：也支持本地手动运行
+- 🤖 **AI 粗排**：基于标题快速筛选，给出 1-10 分相关性评分
+- 🎯 **AI 精排**：基于标题+摘要深度分析，生成中文总结
+- ⭐ **评分展示**：飞书卡片带星级评分（⭐️ x 分数）
+- 📝 **标题翻译**：自动生成专业中文标题翻译
+- 🏷️ **智能分类**：自动识别 RecSys/Search/Ads 相关论文
 
-## 快速开始
+## 工作流程
 
-### 1. 配置环境变量
+```
+获取论文 → 粗排（标题评分）→ 精排（摘要总结）→ 生成报告 → 飞书推送
+   ↓
+  100篇      筛选≥4分           取前20篇
+```
 
-复制 `.env.example` 为 `.env` 并填写：
+## 配置
+
+### 环境变量
+
+复制 `.env.example` 为 `.env`：
 
 ```bash
-# AI 配置（用于总结论文）
+# AI 配置（必填）
 OPENAI_API_KEY=your_api_key
-OPENAI_BASE_URL=https://api.deepseek.com/v1  # 或其他兼容 OpenAI API 的服务
+OPENAI_BASE_URL=https://api.deepseek.com/v1
 MODEL_NAME=deepseek-chat
 
-# 推送配置（可选）
-FEISHU_WEBHOOK=https://open.feishu.cn/open-apis/bot/v2/hook/xxx
+# arXiv 配置（可选）
+TARGET_CATEGORYS=cs.IR,cs.CL,cs.AI,cs.LG,cs.DB
+MAX_PAPERS=100
+ROUGH_SCORE_THRESHOLD=4
+RETURN_PAPERS=20
+
+# 飞书推送（可选，支持多个URL用逗号分隔）
+FEISHU_URL=https://open.feishu.cn/...
 ```
 
-### 2. 配置订阅规则
+### GitHub Actions 配置
 
-编辑 `config.yaml`：
+在仓库 Settings 中配置：
 
-```yaml
-# 订阅配置
-subscriptions:
-  # 按公司/机构筛选
-  companies:
-    - Google
-    - Meta
-    - OpenAI
-    - Microsoft
-    - Amazon
-    - Netflix
-    - Spotify
-    - ByteDance
-    - Alibaba
-    - Tencent
-  
-  # 按研究方向关键词筛选
-  keywords:
-    - recommendation
-    - search
-    - retrieval
-    - ranking
-    - matching
-    - candidate generation
-  
-  # arXiv 分类
-  categories:
-    - cs.IR  # 信息检索
-    - cs.LG  # 机器学习
-    - cs.AI  # 人工智能
-    - cs.CL  # 计算语言学
-    - cs.DB  # 数据库
+**Secrets:**
+- `OPENAI_API_KEY` - AI API Key
+- `OPENAI_BASE_URL` - API 基础 URL（可选）
+- `FEISHU_URL` - 飞书 Webhook（可选）
 
-# 输出配置
-output:
-  format: markdown  # markdown 或 json
-  max_papers_per_day: 50  # 每天最多推送论文数
-  
-# 总结配置
-summary:
-  language: zh  # zh 或 en
-  max_length: 500  # 总结最大长度
-```
+**Variables:**
+- `MODEL_NAME` - 模型名称（默认 deepseek-chat）
+- `TARGET_CATEGORYS` - arXiv 分类（默认 cs.IR,cs.CL,cs.AI）
+- `MAX_PAPERS` - 每分类最大获取数（默认 100）
+- `ROUGH_SCORE_THRESHOLD` - 粗排分数阈值（默认 4）
+- `RETURN_PAPERS` - 最终推送数量（默认 20）
 
-### 3. 运行
+## 本地运行
 
 ```bash
 # 安装依赖
 pip install -r requirements.txt
 
-# 运行爬虫
+# 运行
 python main.py
 ```
 
-## GitHub Actions 自动运行
-
-1. Fork 本仓库
-2. 设置 Secrets（Settings -> Secrets and variables -> Actions）：
-   - `OPENAI_API_KEY`
-   - `OPENAI_BASE_URL`（可选）
-3. 设置 Variables：
-   - `MODEL_NAME`（默认 deepseek-chat）
-   - `FEISHU_WEBHOOK`（可选，用于飞书推送）
-4. 启用 GitHub Actions
-
-工作流默认每天北京时间早 9 点运行。
-
 ## 输出示例
 
-程序会生成 Markdown 文件，包含：
-- 论文标题和链接
-- 作者和机构
-- AI 生成的中文总结
-- 匹配的关键词
+### Markdown 报告
+```markdown
+# arXiv 论文日报 - 2024-01-15
+
+## 今日精选 (15 篇)
+
+### 1. 基于大语言模型的推荐系统综述
+
+**原文标题**: [A Survey on Large Language Models for Recommendation](...)
+
+**作者**: John Doe, et al.
+
+**评分**: ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ (8/10)
+
+**核心总结**:
+该论文系统综述了LLM在推荐系统中的应用，提出了新的分类体系。核心贡献是建立了LLM4Rec的统一框架，并指出了未来研究方向。
+
+**评分理由**:
+直接相关，全面梳理了LLM与RecSys的结合点，对工业界有重要参考价值。
+```
+
+### 飞书卡片
+- 带星级评分的论文列表
+- 中文标题翻译
+- 一句话核心总结
+- 点击标题跳转论文
+
+## 筛选标准
+
+### 关注领域
+- RecSys、Search、Ads 核心进展
+- LLM 基础技术（有应用潜力）
+- Transformer 架构改进
+- VLM 异构数据建模思想
+
+### 排除领域
+- 隐私/安全/伦理等非技术话题
+- 医学/生物/化学等垂直应用
+- NAS/AutoML
+- 纯理论无实践
+- 纯 NLP/CV 无相关性
 
 ## License
 

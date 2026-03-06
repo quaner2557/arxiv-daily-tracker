@@ -42,9 +42,13 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
         MODEL_NAME: ${{ vars.MODEL_NAME }}
-        FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+        FEISHU_URL: ${{ secrets.FEISHU_URL }}
+        TARGET_CATEGORYS: ${{ vars.TARGET_CATEGORYS || 'cs.IR,cs.CL,cs.AI' }}
+        MAX_PAPERS: ${{ vars.MAX_PAPERS || '100' }}
+        ROUGH_SCORE_THRESHOLD: ${{ vars.ROUGH_SCORE_THRESHOLD || '4' }}
+        RETURN_PAPERS: ${{ vars.RETURN_PAPERS || '20' }}
       run: |
-        python main.py --days ${{ github.event.inputs.days || '1' }}
+        python main.py
         
     - name: Commit and push results
       run: |
