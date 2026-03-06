@@ -1,115 +1,48 @@
 # arXiv Daily Tracker
 
-基于 [paperBotV2](https://github.com/Doragd/Algorithm-Practice-in-Industry/tree/main/paperBotV2) 实现，使用 AI 粗排+精排筛选高质量论文。
+基于 [paperBotV2](https://github.com/Doragd/Algorithm-Practice-in-Industry/tree/main/paperBotV2) 的论文汇总，不再调用 LLM API，直接抓取已筛选的高质量论文。
 
-## 核心特点
+## 工作原理
 
-- 🤖 **AI 粗排**：基于标题快速筛选，给出 1-10 分相关性评分
-- 🎯 **AI 精排**：基于标题+摘要深度分析，生成中文总结
-- ⭐ **评分展示**：飞书卡片带星级评分（⭐️ x 分数）
-- 📝 **标题翻译**：自动生成专业中文标题翻译
-- 🏷️ **智能分类**：自动识别 RecSys/Search/Ads 相关论文
+1. **抓取数据**：每天从 paperBotV2 的 GitHub 仓库抓取已粗排+精排的论文数据
+2. **飞书推送**：使用 paperBotV2 的飞书卡片模板推送消息
+3. **本地存档**：将 HTML 网页存档到自己的 GitHub 仓库
 
-## 工作流程
+## 数据来源
 
-```
-获取论文 → 粗排（标题评分）→ 精排（摘要总结）→ 生成报告 → 飞书推送
-   ↓
-  100篇      筛选≥4分           取前20篇
-```
+- **原始数据**: [Doragd/Algorithm-Practice-in-Industry/paperBotV2](https://github.com/Doragd/Algorithm-Practice-in-Industry/tree/main/paperBotV2)
+- **数据格式**: JSON（包含论文标题、翻译、评分、总结等）
+- **更新频率**: 每天自动抓取
 
 ## 配置
 
-### 环境变量
+### 必需配置（GitHub Secrets）
 
-复制 `.env.example` 为 `.env`：
+| Secret | 说明 |
+|--------|------|
+| `FEISHU_URL` | 飞书机器人 Webhook 地址 |
 
-```bash
-# AI 配置（必填）
-OPENAI_API_KEY=your_api_key
-OPENAI_BASE_URL=https://api.deepseek.com/v1
-MODEL_NAME=deepseek-chat
+### 可选配置
 
-# arXiv 配置（可选）
-TARGET_CATEGORYS=cs.IR,cs.CL,cs.AI,cs.LG,cs.DB
-MAX_PAPERS=100
-ROUGH_SCORE_THRESHOLD=4
-RETURN_PAPERS=20
+无需其他配置，程序会自动抓取 paperBotV2 的数据。
 
-# 飞书推送（可选，支持多个URL用逗号分隔）
-FEISHU_URL=https://open.feishu.cn/...
-```
+## 输出
 
-### GitHub Actions 配置
+运行后会生成以下文件到 `output/` 目录：
 
-在仓库 Settings 中配置：
+- `YYYYMMDD.html` - HTML 格式存档（可直接在浏览器打开）
+- `YYYYMMDD.md` - Markdown 格式（便于阅读）
+- `YYYYMMDD.json` - JSON 格式数据
 
-**Secrets:**
-- `OPENAI_API_KEY` - AI API Key
-- `OPENAI_BASE_URL` - API 基础 URL（可选）
-- `FEISHU_URL` - 飞书 Webhook（可选）
+## 与原版区别
 
-**Variables:**
-- `MODEL_NAME` - 模型名称（默认 deepseek-chat）
-- `TARGET_CATEGORYS` - arXiv 分类（默认 cs.IR,cs.CL,cs.AI）
-- `MAX_PAPERS` - 每分类最大获取数（默认 100）
-- `ROUGH_SCORE_THRESHOLD` - 粗排分数阈值（默认 4）
-- `RETURN_PAPERS` - 最终推送数量（默认 20）
+| 功能 | 原版 | 本版本 |
+|------|------|--------|
+| LLM API 调用 | ✅ 需要 | ❌ 不需要 |
+| 数据来源 | arXiv API | paperBotV2 已筛选数据 |
+| 费用 | 有（API 调用费） | 无 |
+| 飞书模板 | paperBotV2 模板 | paperBotV2 模板 |
 
-## 本地运行
+## 感谢
 
-```bash
-# 安装依赖
-pip install -r requirements.txt
-
-# 运行
-python main.py
-```
-
-## 输出示例
-
-### Markdown 报告
-```markdown
-# arXiv 论文日报 - 2024-01-15
-
-## 今日精选 (15 篇)
-
-### 1. 基于大语言模型的推荐系统综述
-
-**原文标题**: [A Survey on Large Language Models for Recommendation](...)
-
-**作者**: John Doe, et al.
-
-**评分**: ⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ (8/10)
-
-**核心总结**:
-该论文系统综述了LLM在推荐系统中的应用，提出了新的分类体系。核心贡献是建立了LLM4Rec的统一框架，并指出了未来研究方向。
-
-**评分理由**:
-直接相关，全面梳理了LLM与RecSys的结合点，对工业界有重要参考价值。
-```
-
-### 飞书卡片
-- 带星级评分的论文列表
-- 中文标题翻译
-- 一句话核心总结
-- 点击标题跳转论文
-
-## 筛选标准
-
-### 关注领域
-- RecSys、Search、Ads 核心进展
-- LLM 基础技术（有应用潜力）
-- Transformer 架构改进
-- VLM 异构数据建模思想
-
-### 排除领域
-- 隐私/安全/伦理等非技术话题
-- 医学/生物/化学等垂直应用
-- NAS/AutoML
-- 纯理论无实践
-- 纯 NLP/CV 无相关性
-
-## License
-
-MIT
+- [paperBotV2](https://github.com/Doragd/Algorithm-Practice-in-Industry/tree/main/paperBotV2) - 提供论文筛选和飞书模板

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-arXiv Daily Tracker - 基于 paperBotV2 的实现
-使用 AI 粗排 + 精排筛选高质量论文
+arXiv Daily Tracker - 抓取 paperBotV2 的论文汇总
+不再调用 LLM API，直接复用 paperBotV2 的结果
 """
 
 import os
@@ -10,16 +10,10 @@ import json
 import time
 import logging
 import requests
-import feedparser
-from typing import List, Dict, Optional
-from datetime import datetime, timedelta, timezone
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, asdict
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import List, Dict, Optional
 
-from openai import OpenAI
-from tqdm import tqdm
-from tenacity import retry, stop_after_attempt, wait_random_exponential
 from dotenv import load_dotenv
 
 # 加载环境变量
@@ -32,440 +26,328 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ============ Prompt 模板（完全复用 paperBotV2）============
 
-PRERANK_PROMPT = """
-# Role
-You are a highly experienced Research Engineer specializing in Large Language Models (LLMs) and Large-Scale Recommendation Systems, with deep knowledge of the search, recommendation, and advertising domains.
-
-# My Current Focus
-
-- **Core Domain Advances:** Core advances within RecSys, Search, or Ads itself, even if they do not involve LLMs.
-- **Enabling LLM Tech:** Trends and Foundational progress in the core LLM which must have potential applications in RecSys, Search or Ads.
-- **Enabling Transformer Tech:** Advances in Transformer architecture (e.g., efficiency, new attention mechanisms, MoE, etc.).
-- **Direct LLM Applications:** Novel ideas and direct applications of LLM technology for RecSys, Search or Ads.
-- **VLM Analogy for Heterogeneous Data:** Ideas inspired by **Vision-Language Models** that treat heterogeneous data (like context features and user sequences) as distinct modalities for unified modeling. 
-
-# Irrelevant Topics
-- Fingerprint, Federated learning, Security, Privacy, Fairness, Ethics, or other non-technical topics
-- Medical, Biology, Chemistry, Physics or other domain-specific applications
-- Neural Architectures Search (NAS) or general AutoML
-- Purely theoretical papers without clear practical implications
-- Hallucination, Evaluation benchmarks, or other purely NLP-centric topics
-- Purely Vision, 3D Vision, Graphic or Speech papers without clear relevance to RecSys/Search/Ads
-- Ads creative generation, auction, bidding or other Non-Ranking Ads topics 
-- AIGC, Content generation, Summarization, or other purely LLM-centric topics
-- Reinforcement Learning (RL) papers without clear relevance to RecSys/Search/Ads
-
-# Goal
-Screen new papers based on my focus. **DO NOT include irrelevant topics**.
-
-# Task
-Based ONLY on the paper's title, provide a quick evaluation.
-1. **Academic Translation**: Translate the title into professional Chinese, prioritizing accurate technical terms and faithful meaning.
-2. **Relevance Score (1-10)**: How relevant is it to **My Current Focus**?
-3. **Reasoning**: A 2-3 sentence explanation for your score. **For "Enabling Tech" papers, you MUST explain their potential application in RecSys/Search/Ads.**
-
-# Input Paper
-- **Title**: {title}
-
-# Output Format
-Provide your analysis strictly in the following JSON format.
-{{
-  "translation": "...",
-  "relevance_score": <integer>,
-  "reasoning": "..."
-}}
-"""
-
-FINERANK_PROMPT = """
-# Role
-You are a highly experienced Research Engineer specializing in Large Language Models (LLMs) and Large-Scale Recommendation Systems, with deep knowledge of the search, recommendation, and advertising domains.
-
-# My Current Focus
-
-- **Core Domain Advances:** Core advances within RecSys, Search, or Ads itself, even if they do not involve LLMs.
-- **Enabling LLM Tech:** Trends and Foundational progress in the core LLM which must have potential applications in RecSys, Search or Ads.
-- **Enabling Transformer Tech:** Advances in Transformer architecture (e.g., efficiency, new attention mechanisms, MoE, etc.).
-- **Direct LLM Applications:** Novel ideas and direct applications of LLM technology for RecSys, Search or Ads.
-- **VLM Analogy for Heterogeneous Data:** Ideas inspired by **Vision-Language Models** that treat heterogeneous data (like context features and user sequences) as distinct modalities for unified modeling. 
-
-# Goal
-Perform a detailed analysis of the provided paper based on its title and abstract. Identify its core contributions and relevance to my focus areas.
-
-# Task
-Based on the paper's **Title** and **Abstract**, provide a comprehensive analysis.
-1.  **Relevance Score (1-10)**: Re-evaluate the relevance score (1-10) based on the detailed information in the abstract.
-2.  **Reasoning**: A 1-2 sentence explanation for your score in Chinese, direct and compact, no filter phrases.
-3.  **Summary**: Generate a 1-2 sentence, ultra-high-density Chinese summary focusing solely on the paper's core idea, to judge if its "idea" is interesting. The summary must precisely distill and answer these two questions:
-    1.  **Topic:** What core problem is the paper studying or solving?
-    2.  **Core Idea:** What is its core method, key idea, or main analytical conclusion?
-    **STRICTLY IGNORE EXPERIMENTAL RESULTS:** Do not include any information about performance, SOTA, dataset metrics, or numerical improvements.
-    **FOCUS ON THE "IDEA":** Your sole purpose is to clearly convey the paper's "core idea," not its "experimental achievements."
-
-# Input Paper
-- **Title**: {title}
-- **Abstract**: {summary}
-
-# Output Format
-Provide your analysis strictly in the following JSON format.
-{{
-  "rerank_relevance_score": <integer>,
-  "rerank_reasoning": "...",
-  "summary": "..."
-}}
-"""
-
-
-@dataclass
-class Paper:
-    """论文数据结构"""
-    arxiv_id: str
-    title: str
-    authors: str
-    categories: str
-    pub_date: str
-    url: str
-    ori_summary: str
+class PaperBotV2Tracker:
+    """抓取 paperBotV2 的论文汇总"""
     
-    # AI 分析结果
-    translation: str = ""
-    relevance_score: int = 0
-    reasoning: str = ""
-    rerank_relevance_score: int = 0
-    rerank_reasoning: str = ""
-    summary: str = ""
-    
-    # 状态标记
-    is_filtered: bool = False
-    is_fine_ranked: bool = False
-
-
-class ArxivTracker:
-    """arXiv 论文追踪器 - 基于 paperBotV2 实现"""
+    # paperBotV2 的 GitHub 仓库信息
+    PAPERBOT_REPO = "Doragd/Algorithm-Practice-in-Industry"
+    PAPERBOT_RAW_URL = "https://raw.githubusercontent.com/Doragd/Algorithm-Practice-in-Industry/main"
+    PAPERBOT_GITHUB_URL = "https://github.com/Doragd/Algorithm-Practice-in-Industry/blob/main"
     
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com/v1")
-        self.model = os.getenv("MODEL_NAME", "deepseek-chat")
-        
-        # 配置参数
-        self.target_categories = [cat.strip() for cat in os.getenv("TARGET_CATEGORYS", "cs.IR,cs.CL,cs.AI").split(",")]
-        self.max_papers = int(os.getenv("MAX_PAPERS", "100"))
-        self.rough_score_threshold = int(os.getenv("ROUGH_SCORE_THRESHOLD", "4"))
-        self.return_papers = int(os.getenv("RETURN_PAPERS", "20"))
         self.feishu_urls = [url.strip() for url in os.getenv("FEISHU_URL", "").split(",") if url.strip()]
-        
-        self.client = None
-        if self.api_key:
-            self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+        self.output_dir = Path("output")
+        self.output_dir.mkdir(exist_ok=True)
     
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(5))
-    def call_llm_api(self, prompt_content: str) -> Optional[Dict]:
-        """调用 LLM API 并返回 JSON 结果"""
-        if not self.client:
-            logger.error("LLM 客户端未初始化")
-            return None
-        
-        try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt_content}],
-                response_format={'type': 'json_object'}
-            )
-            return json.loads(response.choices[0].message.content)
-        except Exception as e:
-            logger.error(f"调用 API 失败: {e}")
-            raise
+    def get_today_date_str(self) -> str:
+        """获取今天的日期字符串"""
+        return datetime.now(timezone.utc).strftime('%Y%m%d')
     
-    def fetch_daily_papers(self, category: str) -> Dict[str, Paper]:
-        """获取指定分类的当天论文"""
-        base_url = 'http://export.arxiv.org/api/query?'
+    def fetch_paperbot_data(self, date_str: str = None) -> Optional[Dict]:
+        """
+        从 paperBotV2 获取指定日期的论文数据
         
-        # 计算日期范围
-        today_utc = datetime.now(timezone.utc)
-        start_of_day = today_utc.replace(hour=0, minute=0, second=0, microsecond=0)
-        yesterday_utc = start_of_day - timedelta(days=1)
+        paperBotV2 的数据结构：
+        - paperBotV2/arxiv_daily/data/YYYYMMDD.json
+        - 包含所有论文的详细信息（已粗排+精排）
+        """
+        if date_str is None:
+            date_str = self.get_today_date_str()
         
-        search_query = f'cat:{category} AND submittedDate:[{yesterday_utc.strftime("%Y%m%d%H%M%S")} TO {today_utc.strftime("%Y%m%d%H%M%S")}]'
+        # 尝试获取今天的数据
+        urls_to_try = [
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/arxiv_daily/data/{date_str}.json",
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/arxiv_daily/data/{date_str}_arxiv.json",
+        ]
         
-        query_params = {
-            'search_query': search_query,
-            'sortBy': 'submittedDate',
-            'sortOrder': 'descending',
-            'start': 0,
-            'max_results': self.max_papers
+        # 如果没找到今天的，尝试昨天（因为时区差异）
+        yesterday = datetime.now(timezone.utc) - __import__('datetime').timedelta(days=1)
+        yesterday_str = yesterday.strftime('%Y%m%d')
+        urls_to_try.extend([
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/arxiv_daily/data/{yesterday_str}.json",
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/arxiv_daily/data/{yesterday_str}_arxiv.json",
+        ])
+        
+        for url in urls_to_try:
+            try:
+                logger.info(f"尝试获取: {url}")
+                response = requests.get(url, timeout=30)
+                if response.status_code == 200:
+                    data = response.json()
+                    logger.info(f"成功获取 {len(data)} 篇论文")
+                    return data
+            except Exception as e:
+                logger.warning(f"获取失败: {e}")
+                continue
+        
+        logger.error("无法获取 paperBotV2 数据")
+        return None
+    
+    def fetch_paperbot_html(self, date_str: str = None) -> Optional[str]:
+        """
+        获取 paperBotV2 生成的 HTML 页面内容
+        """
+        if date_str is None:
+            date_str = self.get_today_date_str()
+        
+        urls_to_try = [
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/output/{date_str}.html",
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/output/{date_str}_arxiv.html",
+        ]
+        
+        yesterday = datetime.now(timezone.utc) - __import__('datetime').timedelta(days=1)
+        yesterday_str = yesterday.strftime('%Y%m%d')
+        urls_to_try.extend([
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/output/{yesterday_str}.html",
+            f"{self.PAPERBOT_RAW_URL}/paperBotV2/output/{yesterday_str}_arxiv.html",
+        ])
+        
+        for url in urls_to_try:
+            try:
+                logger.info(f"尝试获取 HTML: {url}")
+                response = requests.get(url, timeout=30)
+                if response.status_code == 200:
+                    logger.info(f"成功获取 HTML")
+                    return response.text
+            except Exception as e:
+                logger.warning(f"获取失败: {e}")
+                continue
+        
+        return None
+    
+    def parse_papers(self, data: Dict) -> List[Dict]:
+        """
+        解析 paperBotV2 的数据格式
+        
+        paperBotV2 的数据格式：
+        {
+            "arxiv_id": {
+                "title": "...",
+                "translation": "...",
+                "url": "...",
+                "authors": "...",
+                "categories": "...",
+                "pub_date": "...",
+                "ori_summary": "...",
+                "summary": "...",
+                "relevance_score": 8,
+                "rerank_relevance_score": 9,
+                "is_fine_ranked": true,
+                ...
+            }
         }
-        
-        try:
-            response = requests.get(base_url, params=query_params, timeout=30)
-            response.raise_for_status()
-        except Exception as e:
-            logger.error(f"请求失败: {e}")
-            return {}
-        
-        feed = feedparser.parse(response.content)
-        papers = {}
-        
-        logger.info(f"分类 '{category}' 中找到 {len(feed.entries)} 篇论文")
-        
-        for entry in feed.entries:
-            title = re.sub(r'\s+', ' ', entry.title.replace('\n', ' ').strip())
-            arxiv_id = entry.id.split('/abs/')[-1]
-            authors = ', '.join(author.name for author in entry.authors)
-            summary = re.sub(r'\s+', ' ', entry.summary.replace('\n', ' ').strip())
-            published = datetime(*entry.published_parsed[:6]).strftime('%Y-%m-%d %H:%M:%S')
-            categories = ', '.join(tag.term for tag in entry.tags)
-            url = f"https://www.alphaxiv.org/abs/{arxiv_id}"
-            
-            papers[arxiv_id] = Paper(
-                arxiv_id=arxiv_id,
-                title=title,
-                authors=authors,
-                categories=categories,
-                pub_date=published,
-                url=url,
-                ori_summary=summary
-            )
-        
-        return papers
-    
-    def rough_analyze_paper(self, paper: Paper) -> Optional[Paper]:
-        """粗排：基于标题分析"""
-        prompt = PRERANK_PROMPT.format(title=paper.title)
-        result = self.call_llm_api(prompt)
-        
-        if result:
-            paper.translation = result.get('translation', '')
-            paper.relevance_score = result.get('relevance_score', 0)
-            paper.reasoning = result.get('reasoning', '')
-            return paper
-        return None
-    
-    def rough_rank_papers(self, papers: Dict[str, Paper]) -> List[Paper]:
-        """并发粗排"""
-        analyzed = []
-        
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            future_to_paper = {
-                executor.submit(self.rough_analyze_paper, paper): paper 
-                for paper in papers.values()
-            }
-            
-            logger.info(f"开始粗排 {len(papers)} 篇论文...")
-            
-            for future in tqdm(as_completed(future_to_paper), total=len(papers), desc="粗排进度"):
-                try:
-                    result = future.result()
-                    if result:
-                        analyzed.append(result)
-                except Exception as e:
-                    logger.warning(f"分析失败: {e}")
-        
-        # 按分数排序
-        analyzed.sort(key=lambda p: p.relevance_score, reverse=True)
-        
-        # 打印预览
-        logger.info("\n--- 粗排结果预览 ---")
-        for p in analyzed[:10]:
-            logger.info(f"[{p.relevance_score}/10] {p.translation}")
-        
-        # 过滤低分
-        filtered = [p for p in analyzed if p.relevance_score >= self.rough_score_threshold]
-        logger.info(f"\n粗排: {len(analyzed)} 篇 -> 过滤后 {len(filtered)} 篇 (阈值: {self.rough_score_threshold})")
-        
-        return filtered
-    
-    def fine_analyze_paper(self, paper: Paper) -> Optional[Paper]:
-        """精排：基于标题+摘要分析"""
-        prompt = FINERANK_PROMPT.format(title=paper.title, summary=paper.ori_summary)
-        result = self.call_llm_api(prompt)
-        
-        if result:
-            paper.rerank_relevance_score = result.get('rerank_relevance_score', 0)
-            paper.rerank_reasoning = result.get('rerank_reasoning', '')
-            paper.summary = result.get('summary', '')
-            paper.is_fine_ranked = True
-            return paper
-        return None
-    
-    def fine_rank_papers(self, papers: List[Paper]) -> List[Paper]:
-        """并发精排"""
-        # 只精排前 N 篇
-        papers_to_rank = papers[:self.return_papers]
-        
-        analyzed = []
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            future_to_paper = {
-                executor.submit(self.fine_analyze_paper, paper): paper 
-                for paper in papers_to_rank
-            }
-            
-            logger.info(f"开始精排 {len(papers_to_rank)} 篇论文...")
-            
-            for future in tqdm(as_completed(future_to_paper), total=len(papers_to_rank), desc="精排进度"):
-                try:
-                    result = future.result()
-                    if result:
-                        analyzed.append(result)
-                except Exception as e:
-                    logger.warning(f"精排失败: {e}")
+        """
+        papers = []
+        for arxiv_id, paper_info in data.items():
+            # 只保留精排过的论文（高质量）
+            if paper_info.get('is_fine_ranked', False):
+                papers.append({
+                    'arxiv_id': arxiv_id,
+                    'title': paper_info.get('title', ''),
+                    'translation': paper_info.get('translation', ''),
+                    'url': paper_info.get('url', f"https://www.alphaxiv.org/abs/{arxiv_id}"),
+                    'authors': paper_info.get('authors', ''),
+                    'categories': paper_info.get('categories', ''),
+                    'pub_date': paper_info.get('pub_date', ''),
+                    'summary': paper_info.get('summary', ''),
+                    'relevance_score': paper_info.get('relevance_score', 0),
+                    'rerank_relevance_score': paper_info.get('rerank_relevance_score', 0),
+                    'rerank_reasoning': paper_info.get('rerank_reasoning', ''),
+                })
         
         # 按精排分数排序
-        analyzed.sort(key=lambda p: p.rerank_relevance_score, reverse=True)
+        papers.sort(key=lambda p: p['rerank_relevance_score'], reverse=True)
         
-        logger.info(f"\n精排完成: {len(analyzed)} 篇")
-        return analyzed
+        logger.info(f"解析到 {len(papers)} 篇精排论文")
+        return papers
     
-    def save_results(self, all_papers: Dict[str, Paper], final_papers: List[Paper]):
-        """保存结果到 JSON 和 Markdown"""
-        output_dir = Path("output")
-        output_dir.mkdir(exist_ok=True)
+    def save_html_archive(self, html_content: str, date_str: str = None):
+        """保存 HTML 存档到本地"""
+        if date_str is None:
+            date_str = self.get_today_date_str()
         
-        date_str = datetime.now().strftime('%Y%m%d')
+        # 保存原始 HTML
+        html_path = self.output_dir / f"{date_str}.html"
+        with open(html_path, 'w', encoding='utf-8') as f:
+            f.write(html_content)
         
-        # 保存所有论文的 JSON
-        all_data = {p.arxiv_id: asdict(p) for p in all_papers.values()}
-        with open(output_dir / f"{date_str}.json", 'w', encoding='utf-8') as f:
-            json.dump(all_data, f, ensure_ascii=False, indent=2)
-        
-        # 保存精排结果的 Markdown
-        md_content = self.generate_markdown(final_papers)
-        with open(output_dir / f"{date_str}.md", 'w', encoding='utf-8') as f:
+        # 同时保存为 Markdown（便于阅读）
+        md_content = self.convert_html_to_md(html_content)
+        md_path = self.output_dir / f"{date_str}.md"
+        with open(md_path, 'w', encoding='utf-8') as f:
             f.write(md_content)
         
-        logger.info(f"结果已保存到 output/{date_str}.json 和 output/{date_str}.md")
+        logger.info(f"HTML 存档已保存: {html_path}")
+        return html_path, md_path
     
-    def generate_markdown(self, papers: List[Paper]) -> str:
-        """生成 Markdown 报告"""
-        date_str = datetime.now().strftime('%Y-%m-%d')
+    def convert_html_to_md(self, html_content: str) -> str:
+        """简单转换 HTML 为 Markdown"""
+        # 提取标题
+        title_match = re.search(r'<title>(.*?)</title>', html_content, re.DOTALL)
+        title = title_match.group(1) if title_match else "arXiv 论文日报"
         
-        md = f"""# arXiv 论文日报 - {date_str}
-
-> 基于 AI 粗排+精排筛选的高质量论文
-
-## 今日精选 ({len(papers)} 篇)
-
-"""
+        # 提取正文（简化处理）
+        # 移除 script 和 style
+        content = re.sub(r'<script[^>]*>.*?</script>', '', html_content, flags=re.DOTALL)
+        content = re.sub(r'<style[^>]*>.*?</style>', '', content, flags=re.DOTALL)
         
-        for i, p in enumerate(papers, 1):
-            stars = "⭐️" * p.rerank_relevance_score if p.rerank_relevance_score else "N/A"
-            md += f"""### {i}. {p.translation}
-
-**原文标题**: [{p.title}]({p.url})
-
-**作者**: {p.authors}
-
-**评分**: {stars} ({p.rerank_relevance_score}/10)
-
-**分类**: {p.categories}
-
-**核心总结**:
-{p.summary}
-
-**评分理由**:
-{p.rerank_reasoning}
-
----
-
-"""
+        # 转换常见标签
+        content = re.sub(r'<h1[^>]*>(.*?)</h1>', r'# \1\n\n', content, flags=re.DOTALL)
+        content = re.sub(r'<h2[^>]*>(.*?)</h2>', r'## \1\n\n', content, flags=re.DOTALL)
+        content = re.sub(r'<h3[^>]*>(.*?)</h3>', r'### \1\n\n', content, flags=re.DOTALL)
+        content = re.sub(r'<p[^>]*>(.*?)</p>', r'\1\n\n', content, flags=re.DOTALL)
+        content = re.sub(r'<a[^>]*href="([^"]*)"[^>]*>(.*?)</a>', r'[\2](\1)', content, flags=re.DOTALL)
+        content = re.sub(r'<li[^>]*>(.*?)</li>', r'- \1\n', content, flags=re.DOTALL)
         
-        return md
+        # 移除其他标签
+        content = re.sub(r'<[^>]+>', '', content)
+        
+        # 清理空白
+        content = re.sub(r'\n\n\n+', '\n\n', content)
+        
+        return f"# {title}\n\n{content.strip()}"
     
-    def send_to_feishu(self, papers: List[Paper]):
-        """发送飞书文本消息（不使用模板）"""
+    def send_to_feishu(self, papers: List[Dict]):
+        """
+        使用 paperBotV2 的飞书卡片模板格式推送
+        
+        模板 ID: AAqxH62u1uNko (paperBotV2 的模板)
+        """
         if not self.feishu_urls or not papers:
             logger.info("未配置飞书推送，跳过")
             return
         
         date_str = datetime.now().strftime('%Y-%m-%d')
         
-        # 构建文本内容
-        content = f"📚 arXiv 论文日报 - {date_str}\n\n"
-        content += f"今日精选 {len(papers)} 篇高质量论文\n\n"
-        content += "=" * 50 + "\n\n"
-        
-        for i, p in enumerate(papers, 1):
-            stars = "⭐️" * p.rerank_relevance_score if p.rerank_relevance_score else "N/A"
-            
-            content += f"{i}. {p.translation}\n"
-            content += f"   原文: {p.title}\n"
-            content += f"   链接: {p.url}\n"
-            content += f"   评分: {stars} ({p.rerank_relevance_score}/10)\n"
-            content += f"   分类: {p.categories}\n"
-            content += f"   总结: {p.summary}\n"
-            content += f"   理由: {p.rerank_reasoning}\n\n"
-        
-        # 构建简单文本消息
-        body = json.dumps({
-            "msg_type": "text",
-            "content": {
-                "text": content
+        # 构建 paperBotV2 格式的卡片数据
+        card_data = {
+            "type": "template",
+            "data": {
+                "template_id": "AAqxH62u1uNko",
+                "template_version_name": "1.0.8",
+                "template_variable": {
+                    "loop": [],
+                    "date": date_str
+                }
             }
-        })
+        }
+        
+        for p in papers[:20]:  # 最多推送 20 篇
+            score = p.get('rerank_relevance_score', 0)
+            score_formatted = "⭐️" * score + f" <text_tag color='blue'>{score}分</text_tag>" if score else "N/A"
+            
+            card_data['data']['template_variable']['loop'].append({
+                "paper": f"[{p['title']}]({p['url']})",
+                "translation": p.get('translation', 'N/A'),
+                "score": score_formatted,
+                "summary": p.get('summary', 'N/A')
+            })
+        
+        card = json.dumps(card_data)
+        body = json.dumps({"msg_type": "interactive", "card": card})
         headers = {"Content-Type": "application/json"}
         
         for url in self.feishu_urls:
             try:
                 ret = requests.post(url=url, data=body, headers=headers, timeout=10)
                 logger.info(f"飞书推送状态: {ret.status_code}")
+                if ret.status_code != 200:
+                    logger.error(f"飞书推送失败: {ret.text}")
             except Exception as e:
                 logger.error(f"飞书推送失败: {e}")
     
     def run(self):
         """运行完整流程"""
         logger.info("=" * 60)
-        logger.info("开始运行 arXiv Daily Tracker")
-        logger.info(f"目标分类: {self.target_categories}")
+        logger.info("开始抓取 paperBotV2 的论文汇总")
         logger.info("=" * 60)
         
-        # 1. 获取所有分类的论文
-        all_papers = {}
-        for category in self.target_categories:
-            papers = self.fetch_daily_papers(category)
-            all_papers.update(papers)
-            time.sleep(3)  # 避免请求过快
+        date_str = self.get_today_date_str()
         
-        logger.info(f"\n共获取 {len(all_papers)} 篇论文")
-        
-        if not all_papers:
-            logger.info("没有新论文，结束")
+        # 1. 获取论文数据
+        data = self.fetch_paperbot_data(date_str)
+        if not data:
+            logger.error("无法获取论文数据，结束")
             return
         
-        # 2. 粗排
-        filtered_papers = self.rough_rank_papers(all_papers)
-        
-        # 更新状态
-        for p in filtered_papers:
-            all_papers[p.arxiv_id].is_filtered = True
-        
-        if not filtered_papers:
-            logger.info("粗排后没有符合条件的论文")
+        # 2. 解析论文
+        papers = self.parse_papers(data)
+        if not papers:
+            logger.info("没有精排论文，结束")
             return
         
-        # 3. 精排
-        final_papers = self.fine_rank_papers(filtered_papers)
+        # 3. 获取 HTML 存档
+        html_content = self.fetch_paperbot_html(date_str)
+        if html_content:
+            self.save_html_archive(html_content, date_str)
+        else:
+            # 如果没有 HTML，生成一个简单的
+            logger.warning("未找到 HTML，生成简单版本")
+            html_content = self.generate_simple_html(papers, date_str)
+            self.save_html_archive(html_content, date_str)
         
-        # 更新状态
-        for p in final_papers:
-            all_papers[p.arxiv_id].rerank_relevance_score = p.rerank_relevance_score
-            all_papers[p.arxiv_id].rerank_reasoning = p.rerank_reasoning
-            all_papers[p.arxiv_id].summary = p.summary
-            all_papers[p.arxiv_id].is_fine_ranked = True
+        # 4. 保存 JSON 数据
+        json_path = self.output_dir / f"{date_str}.json"
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(papers, f, ensure_ascii=False, indent=2)
         
-        # 4. 保存结果
-        self.save_results(all_papers, final_papers)
-        
-        # 5. 发送飞书通知
-        self.send_to_feishu(final_papers)
+        # 5. 飞书推送
+        self.send_to_feishu(papers)
         
         logger.info("=" * 60)
-        logger.info(f"完成！共处理 {len(final_papers)} 篇高质量论文")
+        logger.info(f"完成！共处理 {len(papers)} 篇论文")
         logger.info("=" * 60)
+    
+    def generate_simple_html(self, papers: List[Dict], date_str: str) -> str:
+        """生成简单的 HTML 页面"""
+        html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>arXiv 论文日报 - {date_str}</title>
+    <style>
+        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }}
+        h1 {{ color: #333; border-bottom: 2px solid #007acc; padding-bottom: 10px; }}
+        .paper {{ background: #f8f9fa; border-left: 4px solid #007acc; padding: 15px; margin: 15px 0; border-radius: 4px; }}
+        .title {{ font-size: 18px; font-weight: bold; color: #007acc; margin-bottom: 8px; }}
+        .translation {{ font-size: 16px; color: #333; margin-bottom: 8px; }}
+        .meta {{ color: #666; font-size: 14px; margin-bottom: 8px; }}
+        .score {{ color: #ff6b6b; font-weight: bold; }}
+        .summary {{ color: #555; margin-top: 10px; }}
+        a {{ color: #007acc; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
+    </style>
+</head>
+<body>
+    <h1>📚 arXiv 论文日报 - {date_str}</h1>
+    <p>共 {len(papers)} 篇高质量论文（来自 paperBotV2）</p>
+"""
+        
+        for i, p in enumerate(papers, 1):
+            stars = "⭐️" * p.get('rerank_relevance_score', 0)
+            html += f"""
+    <div class="paper">
+        <div class="title">{i}. <a href="{p['url']}">{p['title']}</a></div>
+        <div class="translation">{p.get('translation', '')}</div>
+        <div class="meta">
+            <span class="score">{stars} ({p.get('rerank_relevance_score', 0)}/10)</span> | 
+            作者: {p.get('authors', 'N/A')} | 
+            分类: {p.get('categories', 'N/A')}
+        </div>
+        <div class="summary">{p.get('summary', '')}</div>
+    </div>
+"""
+        
+        html += """
+</body>
+</html>
+"""
+        return html
 
 
 def main():
-    tracker = ArxivTracker()
+    tracker = PaperBotV2Tracker()
     tracker.run()
 
 
