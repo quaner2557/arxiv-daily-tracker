@@ -1,0 +1,940 @@
+[
+  {
+    "arxiv_id": "2603.05207v1",
+    "title": "Core-based Hierarchies for Efficient GraphRAG",
+    "authors": [
+      "Jakir Hossain",
+      "Ahmet Erdem Sarıyüce"
+    ],
+    "abstract": "Retrieval-Augmented Generation (RAG) enhances large language models by incorporating external knowledge. However, existing vector-based methods often fail on global sensemaking tasks that require reasoning across many documents. GraphRAG addresses this by organizing documents into a knowledge graph with hierarchical communities that can be recursively summarized. Current GraphRAG approaches rely on Leiden clustering for community detection, but we prove that on sparse knowledge graphs, where average degree is constant and most nodes have low degree, modularity optimization admits exponentially many near-optimal partitions, making Leiden-based communities inherently non-reproducible. To address this, we propose replacing Leiden with k-core decomposition, which yields a deterministic, density-aware hierarchy in linear time. We introduce a set of lightweight heuristics that leverage the k-core hierarchy to construct size-bounded, connectivity-preserving communities for retrieval and summarization, along with a token-budget-aware sampling strategy that reduces LLM costs. We evaluate our methods on real-world datasets including financial earnings transcripts, news articles, and podcasts, using three LLMs for answer generation and five independent LLM judges for head-to-head evaluation. Across datasets and models, our approach consistently improves answer comprehensiveness and diversity while reducing token usage, demonstrating that k-core-based GraphRAG is an effective and efficient framework for global sensemaking.",
+    "published": "2026-03-05T14:17:30+00:00",
+    "primary_category": "cs.IR",
+    "categories": [
+      "cs.IR",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05207v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05207v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05500v1",
+    "title": "POET-X: Memory-efficient LLM Training by Scaling Orthogonal Transformation",
+    "authors": [
+      "Zeju Qiu",
+      "Lixin Liu",
+      "Adrian Weller",
+      "Han Shi",
+      "Weiyang Liu"
+    ],
+    "abstract": "Efficient and stable training of large language models (LLMs) remains a core challenge in modern machine learning systems. To address this challenge, Reparameterized Orthogonal Equivalence Training (POET), a spectrum-preserving framework that optimizes each weight matrix through orthogonal equivalence transformation, has been proposed. Although POET provides strong training stability, its original implementation incurs high memory consumption and computational overhead due to intensive matrix multiplications. To overcome these limitations, we introduce POET-X, a scalable and memory-efficient variant that performs orthogonal equivalence transformations with significantly reduced computational cost. POET-X maintains the generalization and stability benefits of POET while achieving substantial improvements in throughput and memory efficiency. In our experiments, POET-X enables the pretraining of billion-parameter LLMs on a single Nvidia H100 GPU, and in contrast, standard optimizers such as AdamW run out of memory under the same settings.",
+    "published": "2026-03-05T18:59:23+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05500v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05500v1",
+    "matched_companies": [
+      "nvidia",
+      "x"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05483v1",
+    "title": "SurvHTE-Bench: A Benchmark for Heterogeneous Treatment Effect Estimation in Survival Analysis",
+    "authors": [
+      "Shahriar Noroozizadeh",
+      "Xiaobin Shen",
+      "Jeremy C. Weiss",
+      "George H. Chen"
+    ],
+    "abstract": "Estimating heterogeneous treatment effects (HTEs) from right-censored survival data is critical in high-stakes applications such as precision medicine and individualized policy-making. Yet, the survival analysis setting poses unique challenges for HTE estimation due to censoring, unobserved counterfactuals, and complex identification assumptions. Despite recent advances, from Causal Survival Forests to survival meta-learners and outcome imputation approaches, evaluation practices remain fragmented and inconsistent. We introduce SurvHTE-Bench, the first comprehensive benchmark for HTE estimation with censored outcomes. The benchmark spans (i) a modular suite of synthetic datasets with known ground truth, systematically varying causal assumptions and survival dynamics, (ii) semi-synthetic datasets that pair real-world covariates with simulated treatments and outcomes, and (iii) real-world datasets from a twin study (with known ground truth) and from an HIV clinical trial. Across synthetic, semi-synthetic, and real-world settings, we provide the first rigorous comparison of survival HTE methods under diverse conditions and realistic assumption violations. SurvHTE-Bench establishes a foundation for fair, reproducible, and extensible evaluation of causal survival methods. The data and code of our benchmark are available at: https://github.com/Shahriarnz14/SurvHTE-Bench .",
+    "published": "2026-03-05T18:52:02+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "stat.ML"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05483v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05483v1",
+    "matched_companies": [
+      "meta"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05440v1",
+    "title": "Latent Wasserstein Adversarial Imitation Learning",
+    "authors": [
+      "Siqi Yang",
+      "Kai Yan",
+      "Alexander G. Schwing",
+      "Yu-Xiong Wang"
+    ],
+    "abstract": "Imitation Learning (IL) enables agents to mimic expert behavior by learning from demonstrations. However, traditional IL methods require large amounts of medium-to-high-quality demonstrations as well as actions of expert demonstrations, both of which are often unavailable. To reduce this need, we propose Latent Wasserstein Adversarial Imitation Learning (LWAIL), a novel adversarial imitation learning framework that focuses on state-only distribution matching. It benefits from the Wasserstein distance computed in a dynamics-aware latent space. This dynamics-aware latent space differs from prior work and is obtained via a pre-training stage, where we train the Intention Conditioned Value Function (ICVF) to capture a dynamics-aware structure of the state space using a small set of randomly generated state-only data. We show that this enhances the policy's understanding of state transitions, enabling the learning process to use only one or a few state-only expert episodes to achieve expert-level performance. Through experiments on multiple MuJoCo environments, we demonstrate that our method outperforms prior Wasserstein-based IL methods and prior adversarial IL methods, achieving better results across various tasks.",
+    "published": "2026-03-05T18:01:49+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05440v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05440v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "matching"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05375v1",
+    "title": "Robust Node Affinities via Jaccard-Biased Random Walks and Rank Aggregation",
+    "authors": [
+      "Bastian Pfeifer",
+      "Michael G. Schimek"
+    ],
+    "abstract": "Estimating node similarity is a fundamental task in network analysis and graph-based machine learning, with applications in clustering, community detection, classification, and recommendation. We propose TopKGraphs, a method based on start-node-anchored random walks that bias transitions toward nodes with structurally similar neighborhoods, measured via Jaccard similarity. Rather than computing stationary distributions, walks are treated as stochastic neighborhood samplers, producing partial node rankings that are aggregated using robust rank aggregation to construct interpretable node-to-node affinity matrices. TopKGraphs provides a non-parametric, interpretable, and general-purpose representation of node similarity that can be applied in both network analysis and machine learning workflows. We evaluate the method on synthetic graphs (stochastic block models, Lancichinetti-Fortunato-Radicchi benchmark graphs), k-nearest-neighbor graphs from tabular datasets, and a curated high-confidence protein-protein interaction network. Across all scenarios, TopKGraphs achieves competitive or superior performance compared to standard similarity measures (Jaccard, Dice), a diffusion-based method (personalized PageRank), and an embedding-based approach (Node2Vec), demonstrating robustness in sparse, noisy, or heterogeneous networks. These results suggest that TopKGraphs is a versatile and interpretable tool for bridging simple local similarity measures with more complex embedding-based approaches, facilitating both data mining and network analysis applications.",
+    "published": "2026-03-05T17:00:59+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05375v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05375v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "recommendation",
+      "embedding"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05370v1",
+    "title": "Learning Causal Structure of Time Series using Best Order Score Search",
+    "authors": [
+      "Irene Gema Castillo Mansilla",
+      "Urmi Ninad"
+    ],
+    "abstract": "Causal structure learning from observational data is central to many scientific and policy domains, but the time series setting common to many disciplines poses several challenges due to temporal dependence. In this paper we focus on score-based causal discovery for multivariate time series and introduce TS-BOSS, a time series extension of the recently proposed Best Order Score Search (BOSS) (Andrews et al. 2023). TS-BOSS performs a permutation-based search over dynamic Bayesian network structures while leveraging grow-shrink trees to cache intermediate score computations, preserving the scalability and strong empirical performance of BOSS in the static setting. We provide theoretical guarantees establishing the soundness of TS-BOSS under suitable assumptions, and we present an intermediate result that extends classical subgraph minimality results for permutation-based methods to the dynamic (time series) setting. Our experiments on synthetic data show that TS-BOSS is especially effective in high auto-correlation regimes, where it consistently achieves higher adjacency recall at comparable precision than standard constraint-based methods. Overall, TS-BOSS offers a high-performing, scalable approach for time series causal discovery and our results provide a principled bridge for extending sparsity-based, permutation-driven causal learning theory to dynamic settings.",
+    "published": "2026-03-05T16:54:20+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "stat.ME"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05370v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05370v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "search"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05353v1",
+    "title": "InfoFlow KV: Information-Flow-Aware KV Recomputation for Long Context",
+    "authors": [
+      "Xin Teng",
+      "Canyu Zhang",
+      "Shaoyi Zheng",
+      "Danyang Zhuo",
+      "Tianyi Zhou",
+      "Shengjie Wang"
+    ],
+    "abstract": "Retrieval-augmented generation (RAG) for long-context question answering is bottlenecked by inference-time prefilling over large retrieved contexts. A common strategy is to precompute key-value (KV) caches for individual documents and selectively recompute a small subset of tokens to restore global causal dependencies, but existing methods rely on heuristics or representation discrepancies without modeling whether selected tokens can effectively influence generation. We cast selective KV recomputation as an information flow problem and show that a simple attention-norm signal from the query reliably identifies tokens that are both semantically relevant and structurally positioned to propagate information, when computed under an inference-consistent RoPE geometry. We therefore reconstruct global positional assignments for retrieved chunks and introduce an information-flow-guided chunk reordering strategy. Experiments on LLM and VLM benchmarks demonstrate consistent gains over prior methods under comparable efficiency budgets.",
+    "published": "2026-03-05T16:33:20+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05353v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05353v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05296v1",
+    "title": "Latent Policy Steering through One-Step Flow Policies",
+    "authors": [
+      "Hokyun Im",
+      "Andrey Kolobov",
+      "Jianlong Fu",
+      "Youngwoon Lee"
+    ],
+    "abstract": "Offline reinforcement learning (RL) allows robots to learn from offline datasets without risky exploration. Yet, offline RL's performance often hinges on a brittle trade-off between (1) return maximization, which can push policies outside the dataset support, and (2) behavioral constraints, which typically require sensitive hyperparameter tuning. Latent steering offers a structural way to stay within the dataset support during RL, but existing offline adaptations commonly approximate action values using latent-space critics learned via indirect distillation, which can lose information and hinder convergence. We propose Latent Policy Steering (LPS), which enables high-fidelity latent policy improvement by backpropagating original-action-space Q-gradients through a differentiable one-step MeanFlow policy to update a latent-action-space actor. By eliminating proxy latent critics, LPS allows an original-action-space critic to guide end-to-end latent-space optimization, while the one-step MeanFlow policy serves as a behavior-constrained generative prior. This decoupling yields a robust method that works out-of-the-box with minimal tuning. Across OGBench and real-world robotic tasks, LPS achieves state-of-the-art performance and consistently outperforms behavioral cloning and strong latent steering baselines.",
+    "published": "2026-03-05T15:38:08+00:00",
+    "primary_category": "cs.RO",
+    "categories": [
+      "cs.RO",
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05296v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05296v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05293v1",
+    "title": "Knowledge Divergence and the Value of Debate for Scalable Oversight",
+    "authors": [
+      "Robin Young"
+    ],
+    "abstract": "AI safety via debate and reinforcement learning from AI feedback (RLAIF) are both proposed methods for scalable oversight of advanced AI systems, yet no formal framework relates them or characterizes when debate offers an advantage. We analyze this by parameterizing debate's value through the geometry of knowledge divergence between debating models. Using principal angles between models' representation subspaces, we prove that the debate advantage admits an exact closed form. When models share identical training corpora, debate reduces to RLAIF-like where a single-agent method recovers the same optimum. When models possess divergent knowledge, debate advantage scales with a phase transition from quadratic regime (debate offers negligible benefit) to linear regime (debate is essential). We classify three regimes of knowledge divergence (shared, one-sided, and compositional) and provide existence results showing that debate can achieve outcomes inaccessible to either model alone, alongside a negative result showing that sufficiently strong adversarial incentives cause coordination failure in the compositional regime, with a sharp threshold separating effective from ineffective debate. We offer the first formal connection between debate and RLAIF, a geometric foundation for understanding when adversarial oversight protocols are justified, and connection to the problem of eliciting latent knowledge across models with complementary information.",
+    "published": "2026-03-05T15:36:08+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05293v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05293v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05276v1",
+    "title": "Whispering to a Blackbox: Bootstrapping Frozen OCR with Visual Prompts",
+    "authors": [
+      "Samandar Samandarov",
+      "Nazirjon Ismoiljonov",
+      "Abdullah Sattorov",
+      "Temirlan Sabyrbayev"
+    ],
+    "abstract": "In the landscape of modern machine learning, frozen pre-trained models provide stability and efficiency but often underperform on specific tasks due to mismatched data distributions. This paper introduces the Whisperer, a novel visual prompting framework that learns diffusion-based preprocessors to adapt inputs in pixel space, effectively \"whispering\" enhancements to frozen downstream models like EasyOCR. By framing the process as behavioral cloning of stochastically discovered improvement policies, our method achieves an 8% absolute (10.6% relative) reduction in Character Error Rate (CER) on a challenging dataset of 300k degraded synthetic text images, surpassing hand-engineered baselines such as CLAHE. The key innovation is a four-stage training curriculum that uses behavioral cloning to amplify \"lucky\" improvements discovered through the stochastic exploration of a partially trained diffusion model. This approach is highly sample-efficient and avoids the pitfalls of traditional reinforcement learning. Crucially, we frame this not as naive reinforcement learning, but as behavioral cloning of an exploration policy: we stochastically sample intermediate diffusion outputs, select those that improve CER by chance, and then train the model to reproduce them. This bootstrapping curriculum (4 stages over 60 GPU-hours) amplifies random successes into a systematic strategy. In summary, by whispering to the frozen OCR through its inputs, we improve an imperfect classifier without touching its weights.",
+    "published": "2026-03-05T15:22:51+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05276v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05276v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05232v1",
+    "title": "SlideSparse: Fast and Flexible (2N-2):2N Structured Sparsity",
+    "authors": [
+      "Hanyong Shao",
+      "Yingbo Hao",
+      "Ting Song",
+      "Yan Xia",
+      "Di Zhang",
+      "Shaohan Huang",
+      "Xun Wu",
+      "Songchen Xu",
+      "Le Xu",
+      "Li Dong",
+      "Zewen Chi",
+      "Yi Zou",
+      "Furu Wei"
+    ],
+    "abstract": "NVIDIA's 2:4 Sparse Tensor Cores deliver 2x throughput but demand strict 50% pruning -- a ratio that collapses LLM reasoning accuracy (Qwen3: 54% to 15%). Milder $(2N-2):2N$ patterns (e.g., 6:8, 25% pruning) preserve accuracy yet receive no hardware support, falling back to dense execution without any benefit from sparsity. We present SlideSparse, the first system to unlock Sparse Tensor Core acceleration for the $(2N-2):2N$ model family on commodity GPUs. Our Sliding Window Decomposition reconstructs any $(2N-2):2N$ weight block into $N-1$ overlapping 2:4-compliant windows without any accuracy loss; Activation Lifting fuses the corresponding activation rearrangement into per-token quantization at near-zero cost. Integrated into vLLM, SlideSparse is evaluated across various GPUs (A100, H100, B200, RTX 4090, RTX 5080, DGX-spark), precisions (FP4, INT8, FP8, BF16, FP16), and model families (Llama, Qwen, BitNet). On compute-bound workloads, the measured speedup ratio (1.33x) approaches the theoretical upper-bound $N/(N-1)=4/3$ at 6:8 weight sparsity in Qwen2.5-7B, establishing $(2N-2):2N$ as a practical path to accuracy-preserving LLM acceleration. Code available at https://github.com/bcacdwk/vllmbench.",
+    "published": "2026-03-05T14:49:16+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05232v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05232v1",
+    "matched_companies": [
+      "nvidia"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05231v1",
+    "title": "Boosting ASR Robustness via Test-Time Reinforcement Learning with Audio-Text Semantic Rewards",
+    "authors": [
+      "Linghan Fang",
+      "Tianxin Xie",
+      "Li Liu"
+    ],
+    "abstract": "Recently, Automatic Speech Recognition (ASR) systems (e.g., Whisper) have achieved remarkable accuracy improvements but remain highly sensitive to real-world unseen data (data with large distribution shifts), including noisy environments and diverse accents. To address this issue, test-time adaptation (TTA) has shown great potential in improving the model adaptability at inference time without ground-truth labels, and existing TTA methods often rely on pseudo-labeling or entropy minimization. However, by treating model confidence as a learning signal, these methods may reinforce high-confidence errors, leading to confirmation bias that undermines adaptation. To overcome these limitations, we present ASR-TRA, a novel Test-time Reinforcement Adaptation framework inspired by causal intervention. More precisely, our method introduces a learnable decoder prompt and utilizes temperature-controlled stochastic decoding to generate diverse transcription candidates. These are scored by a reward model that measures audio-text semantic alignment, and the resulting feedback is used to update both model and prompt parameters via reinforcement learning. Comprehensive experiments on LibriSpeech with synthetic noise and L2 Arctic accented English datasets demonstrate that our method achieves higher accuracy while maintaining lower latency than existing TTA baselines. Ablation studies further confirm the effectiveness of combining audio and language-based rewards, highlighting our method's enhanced stability and interpretability. Overall, our approach provides a practical and robust solution for deploying ASR systems in challenging real-world conditions.",
+    "published": "2026-03-05T14:43:15+00:00",
+    "primary_category": "cs.SD",
+    "categories": [
+      "cs.SD",
+      "cs.AI",
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05231v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05231v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05218v1",
+    "title": "KARL: Knowledge Agents via Reinforcement Learning",
+    "authors": [
+      "Jonathan D. Chang",
+      "Andrew Drozdov",
+      "Shubham Toshniwal",
+      "Owen Oertell",
+      "Alexander Trott",
+      "Jacob Portes",
+      "Abhay Gupta",
+      "Pallavi Koppol",
+      "Ashutosh Baheti",
+      "Sean Kulinski",
+      "Ivan Zhou",
+      "Irene Dea",
+      "Krista Opsahl-Ong",
+      "Simon Favreau-Lessard",
+      "Sean Owen",
+      "Jose Javier Gonzalez Ortiz",
+      "Arnav Singhvi",
+      "Xabi Andrade",
+      "Cindy Wang",
+      "Kartik Sreenivasan",
+      "Sam Havens",
+      "Jialu Liu",
+      "Peyton DeNiro",
+      "Wen Sun",
+      "Michael Bendersky",
+      "Jonathan Frankle"
+    ],
+    "abstract": "We present a system for training enterprise search agents via reinforcement learning that achieves state-of-the-art performance across a diverse suite of hard-to-verify agentic search tasks. Our work makes four core contributions. First, we introduce KARLBench, a multi-capability evaluation suite spanning six distinct search regimes, including constraint-driven entity search, cross-document report synthesis, tabular numerical reasoning, exhaustive entity retrieval, procedural reasoning over technical documentation, and fact aggregation over internal enterprise notes. Second, we show that models trained across heterogeneous search behaviors generalize substantially better than those optimized for any single benchmark. Third, we develop an agentic synthesis pipeline that employs long-horizon reasoning and tool use to generate diverse, grounded, and high-quality training data, with iterative bootstrapping from increasingly capable models. Fourth, we propose a new post-training paradigm based on iterative large-batch off-policy RL that is sample efficient, robust to train-inference engine discrepancies, and naturally extends to multi-task training with out-of-distribution generalization. Compared to Claude 4.6 and GPT 5.2, KARL is Pareto-optimal on KARLBench across cost-quality and latency-quality trade-offs, including tasks that were out-of-distribution during training. With sufficient test-time compute, it surpasses the strongest closed models. These results show that tailored synthetic data in combination with multi-task reinforcement learning enables cost-efficient and high-performing knowledge agents for grounded reasoning.",
+    "published": "2026-03-05T14:30:25+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05218v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05218v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning",
+      "search",
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05500v1",
+    "title": "POET-X: Memory-efficient LLM Training by Scaling Orthogonal Transformation",
+    "authors": [
+      "Zeju Qiu",
+      "Lixin Liu",
+      "Adrian Weller",
+      "Han Shi",
+      "Weiyang Liu"
+    ],
+    "abstract": "Efficient and stable training of large language models (LLMs) remains a core challenge in modern machine learning systems. To address this challenge, Reparameterized Orthogonal Equivalence Training (POET), a spectrum-preserving framework that optimizes each weight matrix through orthogonal equivalence transformation, has been proposed. Although POET provides strong training stability, its original implementation incurs high memory consumption and computational overhead due to intensive matrix multiplications. To overcome these limitations, we introduce POET-X, a scalable and memory-efficient variant that performs orthogonal equivalence transformations with significantly reduced computational cost. POET-X maintains the generalization and stability benefits of POET while achieving substantial improvements in throughput and memory efficiency. In our experiments, POET-X enables the pretraining of billion-parameter LLMs on a single Nvidia H100 GPU, and in contrast, standard optimizers such as AdamW run out of memory under the same settings.",
+    "published": "2026-03-05T18:59:23+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05500v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05500v1",
+    "matched_companies": [
+      "nvidia",
+      "x"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05483v1",
+    "title": "SurvHTE-Bench: A Benchmark for Heterogeneous Treatment Effect Estimation in Survival Analysis",
+    "authors": [
+      "Shahriar Noroozizadeh",
+      "Xiaobin Shen",
+      "Jeremy C. Weiss",
+      "George H. Chen"
+    ],
+    "abstract": "Estimating heterogeneous treatment effects (HTEs) from right-censored survival data is critical in high-stakes applications such as precision medicine and individualized policy-making. Yet, the survival analysis setting poses unique challenges for HTE estimation due to censoring, unobserved counterfactuals, and complex identification assumptions. Despite recent advances, from Causal Survival Forests to survival meta-learners and outcome imputation approaches, evaluation practices remain fragmented and inconsistent. We introduce SurvHTE-Bench, the first comprehensive benchmark for HTE estimation with censored outcomes. The benchmark spans (i) a modular suite of synthetic datasets with known ground truth, systematically varying causal assumptions and survival dynamics, (ii) semi-synthetic datasets that pair real-world covariates with simulated treatments and outcomes, and (iii) real-world datasets from a twin study (with known ground truth) and from an HIV clinical trial. Across synthetic, semi-synthetic, and real-world settings, we provide the first rigorous comparison of survival HTE methods under diverse conditions and realistic assumption violations. SurvHTE-Bench establishes a foundation for fair, reproducible, and extensible evaluation of causal survival methods. The data and code of our benchmark are available at: https://github.com/Shahriarnz14/SurvHTE-Bench .",
+    "published": "2026-03-05T18:52:02+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "stat.ML"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05483v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05483v1",
+    "matched_companies": [
+      "meta"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05471v1",
+    "title": "Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval",
+    "authors": [
+      "Artem Vazhentsev",
+      "Maria Marina",
+      "Daniil Moskovskiy",
+      "Sergey Pletenev",
+      "Mikhail Seleznyov",
+      "Mikhail Salnikov",
+      "Elena Tutubalina",
+      "Vasily Konovalov",
+      "Irina Nikishina",
+      "Alexander Panchenko",
+      "Viktor Moskvoretskii"
+    ],
+    "abstract": "Trustworthiness is a core research challenge for agentic AI systems built on Large Language Models (LLMs). To enhance trust, natural language claims from diverse sources, including human-written text, web content, and model outputs, are commonly checked for factuality by retrieving external knowledge and using an LLM to verify the faithfulness of claims to the retrieved evidence. As a result, such methods are constrained by retrieval errors and external data availability, while leaving the models intrinsic fact-verification capabilities largely unused. We propose the task of fact-checking without retrieval, focusing on the verification of arbitrary natural language claims, independent of their source. To study this setting, we introduce a comprehensive evaluation framework focused on generalization, testing robustness to (i) long-tail knowledge, (ii) variation in claim sources, (iii) multilinguality, and (iv) long-form generation. Across 9 datasets, 18 methods and 3 models, our experiments indicate that logit-based approaches often underperform compared to those that leverage internal model representations. Building on this finding, we introduce INTRA, a method that exploits interactions between internal representations and achieves state-of-the-art performance with strong generalization. More broadly, our work establishes fact-checking without retrieval as a promising research direction that can complement retrieval-based frameworks, improve scalability, and enable the use of such systems as reward signals during training or as components integrated into the generation process.",
+    "published": "2026-03-05T18:42:51+00:00",
+    "primary_category": "cs.CL",
+    "categories": [
+      "cs.CL",
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05471v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05471v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05414v1",
+    "title": "Dissociating Direct Access from Inference in AI Introspection",
+    "authors": [
+      "Harvey Lederman",
+      "Kyle Mahowald"
+    ],
+    "abstract": "Introspection is a foundational cognitive ability, but its mechanism is not well understood. Recent work has shown that AI models can introspect. We study their mechanism of introspection, first extensively replicating Lindsey et al. (2025)'s thought injection detection paradigm in large open-source models. We show that these models detect injected representations via two separable mechanisms: (i) probability-matching (inferring from perceived anomaly of the prompt) and (ii) direct access to internal states. The direct access mechanism is content-agnostic: models detect that an anomaly occurred but cannot reliably identify its semantic content. The two model classes we study confabulate injected concepts that are high-frequency and concrete (e.g., \"apple'\"); for them correct concept guesses typically require significantly more tokens. This content-agnostic introspective mechanism is consistent with leading theories in philosophy and psychology.",
+    "published": "2026-03-05T17:39:37+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05414v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05414v1",
+    "matched_companies": [
+      "apple"
+    ],
+    "matched_keywords": [
+      "matching"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05370v1",
+    "title": "Learning Causal Structure of Time Series using Best Order Score Search",
+    "authors": [
+      "Irene Gema Castillo Mansilla",
+      "Urmi Ninad"
+    ],
+    "abstract": "Causal structure learning from observational data is central to many scientific and policy domains, but the time series setting common to many disciplines poses several challenges due to temporal dependence. In this paper we focus on score-based causal discovery for multivariate time series and introduce TS-BOSS, a time series extension of the recently proposed Best Order Score Search (BOSS) (Andrews et al. 2023). TS-BOSS performs a permutation-based search over dynamic Bayesian network structures while leveraging grow-shrink trees to cache intermediate score computations, preserving the scalability and strong empirical performance of BOSS in the static setting. We provide theoretical guarantees establishing the soundness of TS-BOSS under suitable assumptions, and we present an intermediate result that extends classical subgraph minimality results for permutation-based methods to the dynamic (time series) setting. Our experiments on synthetic data show that TS-BOSS is especially effective in high auto-correlation regimes, where it consistently achieves higher adjacency recall at comparable precision than standard constraint-based methods. Overall, TS-BOSS offers a high-performing, scalable approach for time series causal discovery and our results provide a principled bridge for extending sparsity-based, permutation-driven causal learning theory to dynamic settings.",
+    "published": "2026-03-05T16:54:20+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "stat.ME"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05370v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05370v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "search"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05361v1",
+    "title": "PACE: A Personalized Adaptive Curriculum Engine for 9-1-1 Call-taker Training",
+    "authors": [
+      "Zirong Chen",
+      "Hongchao Zhang",
+      "Meiyi Ma"
+    ],
+    "abstract": "9-1-1 call-taking training requires mastery of over a thousand interdependent skills, covering diverse incident types and protocol-specific nuances. A nationwide labor shortage is already straining training capacity, but effective instruction still demands that trainers tailor objectives to each trainee's evolving competencies. This personalization burden is one that current practice cannot scale. Partnering with Metro Nashville Department of Emergency Communications (MNDEC), we propose PACE (Personalized Adaptive Curriculum Engine), a co-pilot system that augments trainer decision-making by (1) maintaining probabilistic beliefs over trainee skill states, (2) modeling individual learning and forgetting dynamics, and (3) recommending training scenarios that balance acquisition of new competencies with retention of existing ones. PACE propagates evidence over a structured skill graph to accelerate diagnostic coverage and applies contextual bandits to select scenarios that target gaps the trainee is prepared to address. Empirical results show that PACE achieves 19.50% faster time-to-competence and 10.95% higher terminal mastery compared to state-of-the-art frameworks. Co-pilot studies with practicing training officers further demonstrate a 95.45% alignment rate between PACE's and experts' pedagogical judgments on real-world cases. Under estimation, PACE cuts turnaround time to merely 34 seconds from 11.58 minutes, up to 95.08% reduction.",
+    "published": "2026-03-05T16:42:07+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05361v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05361v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "personalization"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05352v1",
+    "title": "Ailed: A Psyche-Driven Chess Engine with Dynamic Emotional Modulation",
+    "authors": [
+      "Diego Armando Resendez Prado"
+    ],
+    "abstract": "Chess engines passed human strength years ago, but they still don't play like humans. A grandmaster under clock pressure blunders in ways a club player on a hot streak never would. Conventional engines capture none of this.\n  This paper proposes a personality x psyche decomposition to produce behavioral variability in chess play, drawing on patterns observed in human games. Personality is static -- a preset that pins down the engine's character. Psyche is dynamic -- a bounded scalar ψ_t \\in [-100, +100], recomputed from five positional factors after every move. These two components feed into an audio-inspired signal chain (noise gate, compressor/expander, five-band equalizer, saturation limiter) that reshapes move probability distributions on the fly. The chain doesn't care what engine sits behind it: any system that outputs move probabilities will do. It needs no search and carries no state beyond ψ_t.\n  I test the framework across 12,414 games against Maia2-1100, feeding it two probability sources that differ by ~2,800x in training data. Both show the same monotonic gradient in top-move agreement (~20-25 pp spread from stress to overconfidence), which tells us the behavioral variation comes from the signal chain, not from the model underneath. When the psyche runs overconfident, the chain mostly gets out of the way (66% agreement with vanilla Maia2). Under stress, the competitive score falls from 50.8% to 30.1%. The patterns are reminiscent of tilt and overconfidence as described in human play, but I should be upfront: this study includes no human-subject validation.",
+    "published": "2026-03-05T16:32:40+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.HC"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05352v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05352v1",
+    "matched_companies": [
+      "x"
+    ],
+    "matched_keywords": [
+      "search"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05310v1",
+    "title": "Latent-Mark: An Audio Watermark Robust to Neural Resynthesis",
+    "authors": [
+      "Yen-Shan Chen",
+      "Shih-Yu Lai",
+      "Ying-Jung Tsou",
+      "Yi-Cheng Lin",
+      "Bing-Yu Chen",
+      "Yun-Nung Chen",
+      "Hung-Yi Lee",
+      "Shang-Tse Chen"
+    ],
+    "abstract": "While existing audio watermarking techniques have achieved strong robustness against traditional digital signal processing (DSP) attacks, they remain vulnerable to neural resynthesis. This occurs because modern neural audio codecs act as semantic filters and discard the imperceptible waveform variations used in prior watermarking methods. To address this limitation, we propose Latent-Mark, the first zero-bit audio watermarking framework designed to survive semantic compression. Our key insight is that robustness to the encode-decode process requires embedding the watermark within the codec's invariant latent space. We achieve this by optimizing the audio waveform to induce a detectable directional shift in its encoded latent representation, while constraining perturbations to align with the natural audio manifold to ensure imperceptibility. To prevent overfitting to a single codec's quantization rules, we introduce Cross-Codec Optimization, jointly optimizing the waveform across multiple surrogate codecs to target shared latent invariants. Extensive evaluations demonstrate robust zero-shot transferability to unseen neural codecs, achieving state-of-the-art resilience against traditional DSP attacks while preserving perceptual imperceptibility. Our work inspires future research into universal watermarking frameworks capable of maintaining integrity across increasingly complex and diverse generative distortions.",
+    "published": "2026-03-05T15:51:09+00:00",
+    "primary_category": "cs.SD",
+    "categories": [
+      "cs.SD",
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05310v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05310v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "embedding"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05294v1",
+    "title": "STRUCTUREDAGENT: Planning with AND/OR Trees for Long-Horizon Web Tasks",
+    "authors": [
+      "ELita Lobo",
+      "Xu Chen",
+      "Jingjing Meng",
+      "Nan Xi",
+      "Yang Jiao",
+      "Chirag Agarwal",
+      "Yair Zick",
+      "Yan Gao"
+    ],
+    "abstract": "Recent advances in large language models (LLMs) have enabled agentic systems for sequential decision-making. Such agents must perceive their environment, reason across multiple time steps, and take actions that optimize long-term objectives. However, existing web agents struggle on complex, long-horizon tasks due to limited in-context memory for tracking history, weak planning abilities, and greedy behaviors that lead to premature termination. To address these challenges, we propose STRUCTUREDAGENT, a hierarchical planning framework with two core components: (1) an online hierarchical planner that uses dynamic AND/OR trees for efficient search and (2) a structured memory module that tracks and maintains candidate solutions to improve constraint satisfaction in information-seeking tasks. The framework also produces interpretable hierarchical plans, enabling easier debugging and facilitating human intervention when needed. Our results on WebVoyager, WebArena, and custom shopping benchmarks show that STRUCTUREDAGENT improves performance on long-horizon web-browsing tasks compared to standard LLM-based agents.",
+    "published": "2026-03-05T15:37:06+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05294v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05294v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "search"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05290v1",
+    "title": "X-RAY: Mapping LLM Reasoning Capability via Formalized and Calibrated Probes",
+    "authors": [
+      "Gao Tianxi",
+      "Cai Yufan",
+      "Yuan Yusi",
+      "Dong Jin Song"
+    ],
+    "abstract": "Large language models (LLMs) achieve promising performance, yet their ability to reason remains poorly understood. Existing evaluations largely emphasize task-level accuracy, often conflating pattern matching with reasoning capability. We present X-RAY, an explainable reasoning analysis system that maps the LLM reasoning capability using calibrated, formally verified probes. We model reasoning capability as a function of extractable \\textit{structure}, operationalized through formal properties such as constraint interaction, reasoning depth, and solution-space geometry. X-Ray generates probes via formal tools with controlled structural variations, enabling precise isolation of incremental structural information through formal calibration and verification. We evaluate state-of-the-art LLMs on problems ranging from junior-level to advanced in mathematics, physics, and chemistry. Our analysis reveals a systematic asymmetry in LLM reasoning: models are relatively robust to constraint refinement, where additional conditions shrink an existing solution space, but degrade sharply under solution-space restructuring, where modifications alter the underlying structural form of the solution manifold. Moreover, calibrated formal probes differentiate models that appear indistinguishable on standard benchmarks and reveal failure modes that are structurally interpretable rather than opaque. Beyond evaluation, our framework is contamination-free and supports the training and testing of reasoning models.",
+    "published": "2026-03-05T15:34:22+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05290v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05290v1",
+    "matched_companies": [
+      "x"
+    ],
+    "matched_keywords": [
+      "matching"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05276v1",
+    "title": "Whispering to a Blackbox: Bootstrapping Frozen OCR with Visual Prompts",
+    "authors": [
+      "Samandar Samandarov",
+      "Nazirjon Ismoiljonov",
+      "Abdullah Sattorov",
+      "Temirlan Sabyrbayev"
+    ],
+    "abstract": "In the landscape of modern machine learning, frozen pre-trained models provide stability and efficiency but often underperform on specific tasks due to mismatched data distributions. This paper introduces the Whisperer, a novel visual prompting framework that learns diffusion-based preprocessors to adapt inputs in pixel space, effectively \"whispering\" enhancements to frozen downstream models like EasyOCR. By framing the process as behavioral cloning of stochastically discovered improvement policies, our method achieves an 8% absolute (10.6% relative) reduction in Character Error Rate (CER) on a challenging dataset of 300k degraded synthetic text images, surpassing hand-engineered baselines such as CLAHE. The key innovation is a four-stage training curriculum that uses behavioral cloning to amplify \"lucky\" improvements discovered through the stochastic exploration of a partially trained diffusion model. This approach is highly sample-efficient and avoids the pitfalls of traditional reinforcement learning. Crucially, we frame this not as naive reinforcement learning, but as behavioral cloning of an exploration policy: we stochastically sample intermediate diffusion outputs, select those that improve CER by chance, and then train the model to reproduce them. This bootstrapping curriculum (4 stages over 60 GPU-hours) amplifies random successes into a systematic strategy. In summary, by whispering to the frozen OCR through its inputs, we improve an imperfect classifier without touching its weights.",
+    "published": "2026-03-05T15:22:51+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05276v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05276v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05235v1",
+    "title": "Reclaiming Lost Text Layers for Source-Free Cross-Domain Few-Shot Learning",
+    "authors": [
+      "Zhenyu Zhang",
+      "Guangyao Chen",
+      "Yixiong Zou",
+      "Yuhua Li",
+      "Ruixuan Li"
+    ],
+    "abstract": "Source-Free Cross-Domain Few-Shot Learning (SF-CDFSL) focuses on fine-tuning with limited training data from target domains (e.g., medical or satellite images), where CLIP has recently shown promising results due to its generalizability to downstream tasks. Current works indicate CLIP's text encoder is more suitable for cross-domain tasks, however, we find that \\textbf{removing certain middle layers of the text encoder can effectively improve performance in SF-CDFSL}, which we call the Lost Layers. In this paper, we delve into this phenomenon for a deeper understanding. We discover that instead of being harmful for the SF-CDFSL task, the information in these layers is actually beneficial, but visual gaps prevent this useful information from being fully utilized, making these layers seem redundant. Based on this understanding, unlike current works that simply remove these layers, we propose a method to teachs the model to \\textbf{re-utilize} information in these lost layers at both the layer and encoder levels, guiding the re-learning of the visual branch under domain shifts. Our approach effectively addresses the issue of underutilized information in the text encoder. Extensive experiments across various settings, backbones (CLIP, SigLip, PE-Core), and tasks (4 CDFSL datasets and 10 Meta-dataset datasets) demonstrate the effectiveness of our method. Code is available at https://github.com/zhenyuZ-HUST/CVPR26-VtT.",
+    "published": "2026-03-05T14:51:52+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05235v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05235v1",
+    "matched_companies": [
+      "meta"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05231v1",
+    "title": "Boosting ASR Robustness via Test-Time Reinforcement Learning with Audio-Text Semantic Rewards",
+    "authors": [
+      "Linghan Fang",
+      "Tianxin Xie",
+      "Li Liu"
+    ],
+    "abstract": "Recently, Automatic Speech Recognition (ASR) systems (e.g., Whisper) have achieved remarkable accuracy improvements but remain highly sensitive to real-world unseen data (data with large distribution shifts), including noisy environments and diverse accents. To address this issue, test-time adaptation (TTA) has shown great potential in improving the model adaptability at inference time without ground-truth labels, and existing TTA methods often rely on pseudo-labeling or entropy minimization. However, by treating model confidence as a learning signal, these methods may reinforce high-confidence errors, leading to confirmation bias that undermines adaptation. To overcome these limitations, we present ASR-TRA, a novel Test-time Reinforcement Adaptation framework inspired by causal intervention. More precisely, our method introduces a learnable decoder prompt and utilizes temperature-controlled stochastic decoding to generate diverse transcription candidates. These are scored by a reward model that measures audio-text semantic alignment, and the resulting feedback is used to update both model and prompt parameters via reinforcement learning. Comprehensive experiments on LibriSpeech with synthetic noise and L2 Arctic accented English datasets demonstrate that our method achieves higher accuracy while maintaining lower latency than existing TTA baselines. Ablation studies further confirm the effectiveness of combining audio and language-based rewards, highlighting our method's enhanced stability and interpretability. Overall, our approach provides a practical and robust solution for deploying ASR systems in challenging real-world conditions.",
+    "published": "2026-03-05T14:43:15+00:00",
+    "primary_category": "cs.SD",
+    "categories": [
+      "cs.SD",
+      "cs.AI",
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05231v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05231v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05225v1",
+    "title": "AI+HW 2035: Shaping the Next Decade",
+    "authors": [
+      "Deming Chen",
+      "Jason Cong",
+      "Azalia Mirhoseini",
+      "Christos Kozyrakis",
+      "Subhasish Mitra",
+      "Jinjun Xiong",
+      "Cliff Young",
+      "Anima Anandkumar",
+      "Michael Littman",
+      "Aron Kirschen",
+      "Sophia Shao",
+      "Serge Leef",
+      "Naresh Shanbhag",
+      "Dejan Milojicic",
+      "Michael Schulte",
+      "Gert Cauwenberghs",
+      "Jerry M. Chow",
+      "Tri Dao",
+      "Kailash Gopalakrishnan",
+      "Richard Ho",
+      "Hoshik Kim",
+      "Kunle Olukotun",
+      "David Z. Pan",
+      "Mark Ren",
+      "Dan Roth",
+      "Aarti Singh",
+      "Yizhou Sun",
+      "Yusu Wang",
+      "Yann LeCun",
+      "Ruchir Puri"
+    ],
+    "abstract": "Artificial intelligence (AI) and hardware (HW) are advancing at unprecedented rates, yet their trajectories have become inseparably intertwined. The global research community lacks a cohesive, long-term vision to strategically coordinate the development of AI and HW. This fragmentation constrains progress toward holistic, sustainable, and adaptive AI systems capable of learning, reasoning, and operating efficiently across cloud, edge, and physical environments. The future of AI depends not only on scaling intelligence, but on scaling efficiency, achieving exponential gains in intelligence per joule, rather than unbounded compute consumption. Addressing this grand challenge requires rethinking the entire computing stack. This vision paper lays out a 10-year roadmap for AI+HW co-design and co-development, spanning algorithms, architectures, systems, and sustainability. We articulate key insights that redefine scaling around energy efficiency, system-level integration, and cross-layer optimization. We identify key challenges and opportunities, candidly assess potential obstacles and pitfalls, and propose integrated solutions grounded in algorithmic innovation, hardware advances, and software abstraction. Looking ahead, we define what success means in 10 years: achieving a 1000x improvement in efficiency for AI training and inference; enabling energy-aware, self-optimizing systems that seamlessly span cloud, edge, and physical AI; democratizing access to advanced AI infrastructure; and embedding human-centric principles into the design of intelligent systems. Finally, we outline concrete action items for academia, industry, government, and the broader community, calling for coordinated national initiatives, shared infrastructure, workforce development, cross-agency collaboration, and sustained public-private partnerships to ensure that AI+HW co-design becomes a unifying long-term mission.",
+    "published": "2026-03-05T14:36:33+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.AR"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05225v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05225v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "embedding"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05218v1",
+    "title": "KARL: Knowledge Agents via Reinforcement Learning",
+    "authors": [
+      "Jonathan D. Chang",
+      "Andrew Drozdov",
+      "Shubham Toshniwal",
+      "Owen Oertell",
+      "Alexander Trott",
+      "Jacob Portes",
+      "Abhay Gupta",
+      "Pallavi Koppol",
+      "Ashutosh Baheti",
+      "Sean Kulinski",
+      "Ivan Zhou",
+      "Irene Dea",
+      "Krista Opsahl-Ong",
+      "Simon Favreau-Lessard",
+      "Sean Owen",
+      "Jose Javier Gonzalez Ortiz",
+      "Arnav Singhvi",
+      "Xabi Andrade",
+      "Cindy Wang",
+      "Kartik Sreenivasan",
+      "Sam Havens",
+      "Jialu Liu",
+      "Peyton DeNiro",
+      "Wen Sun",
+      "Michael Bendersky",
+      "Jonathan Frankle"
+    ],
+    "abstract": "We present a system for training enterprise search agents via reinforcement learning that achieves state-of-the-art performance across a diverse suite of hard-to-verify agentic search tasks. Our work makes four core contributions. First, we introduce KARLBench, a multi-capability evaluation suite spanning six distinct search regimes, including constraint-driven entity search, cross-document report synthesis, tabular numerical reasoning, exhaustive entity retrieval, procedural reasoning over technical documentation, and fact aggregation over internal enterprise notes. Second, we show that models trained across heterogeneous search behaviors generalize substantially better than those optimized for any single benchmark. Third, we develop an agentic synthesis pipeline that employs long-horizon reasoning and tool use to generate diverse, grounded, and high-quality training data, with iterative bootstrapping from increasingly capable models. Fourth, we propose a new post-training paradigm based on iterative large-batch off-policy RL that is sample efficient, robust to train-inference engine discrepancies, and naturally extends to multi-task training with out-of-distribution generalization. Compared to Claude 4.6 and GPT 5.2, KARL is Pareto-optimal on KARLBench across cost-quality and latency-quality trade-offs, including tasks that were out-of-distribution during training. With sufficient test-time compute, it surpasses the strongest closed models. These results show that tailored synthetic data in combination with multi-task reinforcement learning enables cost-efficient and high-performing knowledge agents for grounded reasoning.",
+    "published": "2026-03-05T14:30:25+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.LG"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05218v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05218v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning",
+      "search",
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05500v1",
+    "title": "POET-X: Memory-efficient LLM Training by Scaling Orthogonal Transformation",
+    "authors": [
+      "Zeju Qiu",
+      "Lixin Liu",
+      "Adrian Weller",
+      "Han Shi",
+      "Weiyang Liu"
+    ],
+    "abstract": "Efficient and stable training of large language models (LLMs) remains a core challenge in modern machine learning systems. To address this challenge, Reparameterized Orthogonal Equivalence Training (POET), a spectrum-preserving framework that optimizes each weight matrix through orthogonal equivalence transformation, has been proposed. Although POET provides strong training stability, its original implementation incurs high memory consumption and computational overhead due to intensive matrix multiplications. To overcome these limitations, we introduce POET-X, a scalable and memory-efficient variant that performs orthogonal equivalence transformations with significantly reduced computational cost. POET-X maintains the generalization and stability benefits of POET while achieving substantial improvements in throughput and memory efficiency. In our experiments, POET-X enables the pretraining of billion-parameter LLMs on a single Nvidia H100 GPU, and in contrast, standard optimizers such as AdamW run out of memory under the same settings.",
+    "published": "2026-03-05T18:59:23+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.AI",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05500v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05500v1",
+    "matched_companies": [
+      "nvidia",
+      "x"
+    ],
+    "matched_keywords": [],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05471v1",
+    "title": "Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval",
+    "authors": [
+      "Artem Vazhentsev",
+      "Maria Marina",
+      "Daniil Moskovskiy",
+      "Sergey Pletenev",
+      "Mikhail Seleznyov",
+      "Mikhail Salnikov",
+      "Elena Tutubalina",
+      "Vasily Konovalov",
+      "Irina Nikishina",
+      "Alexander Panchenko",
+      "Viktor Moskvoretskii"
+    ],
+    "abstract": "Trustworthiness is a core research challenge for agentic AI systems built on Large Language Models (LLMs). To enhance trust, natural language claims from diverse sources, including human-written text, web content, and model outputs, are commonly checked for factuality by retrieving external knowledge and using an LLM to verify the faithfulness of claims to the retrieved evidence. As a result, such methods are constrained by retrieval errors and external data availability, while leaving the models intrinsic fact-verification capabilities largely unused. We propose the task of fact-checking without retrieval, focusing on the verification of arbitrary natural language claims, independent of their source. To study this setting, we introduce a comprehensive evaluation framework focused on generalization, testing robustness to (i) long-tail knowledge, (ii) variation in claim sources, (iii) multilinguality, and (iv) long-form generation. Across 9 datasets, 18 methods and 3 models, our experiments indicate that logit-based approaches often underperform compared to those that leverage internal model representations. Building on this finding, we introduce INTRA, a method that exploits interactions between internal representations and achieves state-of-the-art performance with strong generalization. More broadly, our work establishes fact-checking without retrieval as a promising research direction that can complement retrieval-based frameworks, improve scalability, and enable the use of such systems as reward signals during training or as components integrated into the generation process.",
+    "published": "2026-03-05T18:42:51+00:00",
+    "primary_category": "cs.CL",
+    "categories": [
+      "cs.CL",
+      "cs.AI"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05471v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05471v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "retrieval"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05414v1",
+    "title": "Dissociating Direct Access from Inference in AI Introspection",
+    "authors": [
+      "Harvey Lederman",
+      "Kyle Mahowald"
+    ],
+    "abstract": "Introspection is a foundational cognitive ability, but its mechanism is not well understood. Recent work has shown that AI models can introspect. We study their mechanism of introspection, first extensively replicating Lindsey et al. (2025)'s thought injection detection paradigm in large open-source models. We show that these models detect injected representations via two separable mechanisms: (i) probability-matching (inferring from perceived anomaly of the prompt) and (ii) direct access to internal states. The direct access mechanism is content-agnostic: models detect that an anomaly occurred but cannot reliably identify its semantic content. The two model classes we study confabulate injected concepts that are high-frequency and concrete (e.g., \"apple'\"); for them correct concept guesses typically require significantly more tokens. This content-agnostic introspective mechanism is consistent with leading theories in philosophy and psychology.",
+    "published": "2026-03-05T17:39:37+00:00",
+    "primary_category": "cs.AI",
+    "categories": [
+      "cs.AI",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05414v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05414v1",
+    "matched_companies": [
+      "apple"
+    ],
+    "matched_keywords": [
+      "matching"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05357v1",
+    "title": "DiSCTT: Consensus-Guided Self-Curriculum for Efficient Test-Time Adaptation in Reasoning",
+    "authors": [
+      "Mohammad Mahdi Moradi",
+      "Sudhir Mudur"
+    ],
+    "abstract": "Test-time adaptation offers a promising avenue for improving reasoning performance in large language models without additional supervision, but existing approaches often apply a uniform optimization objective across all inputs, leading to inefficient or unstable adaptation on heterogeneous reasoning problems. We propose DiSCTT, a difficulty-aware, consensus-guided self-curriculum framework that dynamically allocates test-time optimization strategies based on instance-level epistemic uncertainty estimated from agreement among sampled reasoning trajectories. Inputs with high consensus are consolidated via supervised fine-tuning using majority-agreed solutions as pseudo-labels, while low-consensus inputs are optimized via reinforcement learning with a consensus-regularized objective that encourages diversity under relevance constraints. Across a broad suite of mathematical and general reasoning benchmarks, DiSCTT consistently outperforms strong test-time adaptation baselines, achieving higher accuracy with reduced variance and substantially lower computation and wall-clock training times. These results demonstrate that explicitly accounting for instance difficulty and uncertainty enables more stable, efficient, and effective test-time adaptation for reasoning models.",
+    "published": "2026-03-05T16:38:50+00:00",
+    "primary_category": "cs.CL",
+    "categories": [
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05357v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05357v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05293v1",
+    "title": "Knowledge Divergence and the Value of Debate for Scalable Oversight",
+    "authors": [
+      "Robin Young"
+    ],
+    "abstract": "AI safety via debate and reinforcement learning from AI feedback (RLAIF) are both proposed methods for scalable oversight of advanced AI systems, yet no formal framework relates them or characterizes when debate offers an advantage. We analyze this by parameterizing debate's value through the geometry of knowledge divergence between debating models. Using principal angles between models' representation subspaces, we prove that the debate advantage admits an exact closed form. When models share identical training corpora, debate reduces to RLAIF-like where a single-agent method recovers the same optimum. When models possess divergent knowledge, debate advantage scales with a phase transition from quadratic regime (debate offers negligible benefit) to linear regime (debate is essential). We classify three regimes of knowledge divergence (shared, one-sided, and compositional) and provide existence results showing that debate can achieve outcomes inaccessible to either model alone, alongside a negative result showing that sufficiently strong adversarial incentives cause coordination failure in the compositional regime, with a sharp threshold separating effective from ineffective debate. We offer the first formal connection between debate and RLAIF, a geometric foundation for understanding when adversarial oversight protocols are justified, and connection to the problem of eliciting latent knowledge across models with complementary information.",
+    "published": "2026-03-05T15:36:08+00:00",
+    "primary_category": "cs.LG",
+    "categories": [
+      "cs.LG",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05293v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05293v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05275v1",
+    "title": "SarcasmMiner: A Dual-Track Post-Training Framework for Robust Audio-Visual Sarcasm Reasoning",
+    "authors": [
+      "Zhu Li",
+      "Yongjian Chen",
+      "Huiyuan Lai",
+      "Xiyuan Gao",
+      "Shekhar Nayak",
+      "Matt Coler"
+    ],
+    "abstract": "Multimodal sarcasm detection requires resolving pragmatic incongruity across textual, acoustic, and visual cues through cross-modal reasoning. To enable robust sarcasm reasoning with foundation models, we propose SarcasmMiner, a reinforcement learning based post-training framework that resists hallucination in multimodal reasoning. We reformulate sarcasm detection as structured reasoning and adopt a dual-track distillation strategy: high-quality teacher trajectories initialize the student model, while the full set of trajectories trains a generative reward model (GenRM) to evaluate reasoning quality. The student is optimized with group relative policy optimization (GRPO) using decoupled rewards for accuracy and reasoning quality. On MUStARD++, SarcasmMiner increases F1 from 59.83% (zero-shot), 68.23% (supervised finetuning) to 70.22%. These findings suggest that reasoning-aware reward modeling enhances both performance and multimodal grounding.",
+    "published": "2026-03-05T15:22:39+00:00",
+    "primary_category": "cs.MM",
+    "categories": [
+      "cs.MM",
+      "cs.CL",
+      "cs.SD"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05275v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05275v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "reinforcement learning"
+    ],
+    "summary": null
+  },
+  {
+    "arxiv_id": "2603.05207v1",
+    "title": "Core-based Hierarchies for Efficient GraphRAG",
+    "authors": [
+      "Jakir Hossain",
+      "Ahmet Erdem Sarıyüce"
+    ],
+    "abstract": "Retrieval-Augmented Generation (RAG) enhances large language models by incorporating external knowledge. However, existing vector-based methods often fail on global sensemaking tasks that require reasoning across many documents. GraphRAG addresses this by organizing documents into a knowledge graph with hierarchical communities that can be recursively summarized. Current GraphRAG approaches rely on Leiden clustering for community detection, but we prove that on sparse knowledge graphs, where average degree is constant and most nodes have low degree, modularity optimization admits exponentially many near-optimal partitions, making Leiden-based communities inherently non-reproducible. To address this, we propose replacing Leiden with k-core decomposition, which yields a deterministic, density-aware hierarchy in linear time. We introduce a set of lightweight heuristics that leverage the k-core hierarchy to construct size-bounded, connectivity-preserving communities for retrieval and summarization, along with a token-budget-aware sampling strategy that reduces LLM costs. We evaluate our methods on real-world datasets including financial earnings transcripts, news articles, and podcasts, using three LLMs for answer generation and five independent LLM judges for head-to-head evaluation. Across datasets and models, our approach consistently improves answer comprehensiveness and diversity while reducing token usage, demonstrating that k-core-based GraphRAG is an effective and efficient framework for global sensemaking.",
+    "published": "2026-03-05T14:17:30+00:00",
+    "primary_category": "cs.IR",
+    "categories": [
+      "cs.IR",
+      "cs.CL"
+    ],
+    "pdf_url": "https://arxiv.org/pdf/2603.05207v1",
+    "arxiv_url": "http://arxiv.org/abs/2603.05207v1",
+    "matched_companies": [],
+    "matched_keywords": [
+      "retrieval"
+    ],
+    "summary": null
+  }
+]

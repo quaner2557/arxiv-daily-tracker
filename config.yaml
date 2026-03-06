@@ -1,0 +1,112 @@
+# arXiv 订阅配置
+
+# 订阅规则
+subscriptions:
+  # 要关注的公司/机构名称（不区分大小写）
+  companies:
+    - Google
+    - Google Research
+    - DeepMind
+    - Meta
+    - Facebook
+    - OpenAI
+    - Microsoft
+    - Microsoft Research
+    - Amazon
+    - AWS
+    - Netflix
+    - Spotify
+    - Airbnb
+    - Uber
+    - Lyft
+    - Pinterest
+    - LinkedIn
+    - Twitter
+    - X
+    - ByteDance
+    - TikTok
+    - Alibaba
+    - Ant Group
+    - Tencent
+    - Baidu
+    - JD
+    - Meituan
+    - Kuaishou
+    - Huawei
+    - Apple
+    - NVIDIA
+
+  # 研究方向关键词（不区分大小写）
+  keywords:
+    - recommendation
+    - recommender
+    - recommendation system
+    - search
+    - information retrieval
+    - retrieval
+    - ranking
+    - learning to rank
+    - matching
+    - candidate generation
+    - query understanding
+    - semantic search
+    - vector search
+    - approximate nearest neighbor
+    - ANN
+    - embedding
+    - representation learning
+    - personalization
+    - collaborative filtering
+    - content-based filtering
+    - session-based recommendation
+    - sequential recommendation
+    - multi-armed bandit
+    - contextual bandit
+    - reinforcement learning
+    - RLHF
+
+  # arXiv 分类（可选）
+  # 常用分类：
+  # cs.IR - 信息检索
+  # cs.LG - 机器学习
+  # cs.AI - 人工智能
+  # cs.CL - 计算语言学/NLP
+  # cs.DB - 数据库
+  # cs.DC - 分布式计算
+  # cs.SE - 软件工程
+  categories:
+    - cs.IR
+    - cs.LG
+    - cs.AI
+    - cs.CL
+    - cs.DB
+
+# 输出配置
+output:
+  format: markdown
+  directory: ./output
+  max_papers_per_day: 100
+
+# AI 总结配置
+summary:
+  language: zh  # zh 或 en
+  max_length: 400
+  temperature: 0.3
+
+# 推送配置（可选）
+notifications:
+  feishu:
+    enabled: false
+    webhook: ""  # 飞书机器人 webhook URL
+  
+  # 可以扩展其他推送方式
+  # dingtalk:
+  #   enabled: false
+  #   webhook: ""
+  # email:
+  #   enabled: false
+  #   smtp_server: ""
+  #   smtp_port: 587
+  #   username: ""
+  #   password: ""
+  #   to: ""
