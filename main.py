@@ -373,39 +373,36 @@ class ArxivTracker:
         return md
     
     def send_to_feishu(self, papers: List[Paper]):
-        """发送飞书卡片消息"""
+        """发送飞书文本消息（不使用模板）"""
         if not self.feishu_urls or not papers:
             logger.info("未配置飞书推送，跳过")
             return
         
         date_str = datetime.now().strftime('%Y-%m-%d')
         
-        # 构建卡片数据（复用 paperBotV2 的模板格式）
-        card_data = {
-            "type": "template",
-            "data": {
-                "template_id": "AAqxH62u1uNko",
-                "template_version_name": "1.0.8",
-                "template_variable": {
-                    "loop": [],
-                    "date": date_str
-                }
-            }
-        }
+        # 构建文本内容
+        content = f"📚 arXiv 论文日报 - {date_str}\n\n"
+        content += f"今日精选 {len(papers)} 篇高质量论文\n\n"
+        content += "=" * 50 + "\n\n"
         
-        for p in papers:
-            score = p.rerank_relevance_score
-            score_formatted = "⭐️" * score + f" <text_tag color='blue'>{score}分</text_tag>" if score else "N/A"
+        for i, p in enumerate(papers, 1):
+            stars = "⭐️" * p.rerank_relevance_score if p.rerank_relevance_score else "N/A"
             
-            card_data['data']['template_variable']['loop'].append({
-                "paper": f"[{p.title}]({p.url})",
-                "translation": p.translation or "N/A",
-                "score": score_formatted,
-                "summary": p.summary or "N/A"
-            })
+            content += f"{i}. {p.translation}\n"
+            content += f"   原文: {p.title}\n"
+            content += f"   链接: {p.url}\n"
+            content += f"   评分: {stars} ({p.rerank_relevance_score}/10)\n"
+            content += f"   分类: {p.categories}\n"
+            content += f"   总结: {p.summary}\n"
+            content += f"   理由: {p.rerank_reasoning}\n\n"
         
-        card = json.dumps(card_data)
-        body = json.dumps({"msg_type": "interactive", "card": card})
+        # 构建简单文本消息
+        body = json.dumps({
+            "msg_type": "text",
+            "content": {
+                "text": content
+            }
+        })
         headers = {"Content-Type": "application/json"}
         
         for url in self.feishu_urls:
