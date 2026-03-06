@@ -4,16 +4,22 @@
 subscriptions:
   # 要关注的公司/机构名称（不区分大小写）
   companies:
+    # ===== 美国主要科技公司 =====
     - Google
     - Google Research
     - DeepMind
+    - Alphabet
     - Meta
     - Facebook
+    - Instagram
+    - WhatsApp
     - OpenAI
     - Microsoft
     - Microsoft Research
     - Amazon
     - AWS
+    - Amazon Science
+    - Apple
     - Netflix
     - Spotify
     - Airbnb
@@ -23,18 +29,123 @@ subscriptions:
     - LinkedIn
     - Twitter
     - X
-    - ByteDance
-    - TikTok
-    - Alibaba
-    - Ant Group
-    - Tencent
-    - Baidu
-    - JD
-    - Meituan
-    - Kuaishou
-    - Huawei
-    - Apple
     - NVIDIA
+    - Intel
+    - AMD
+    - Qualcomm
+    - IBM
+    - Oracle
+    - Salesforce
+    - Adobe
+    - TikTok
+    - Snap
+    - Snapchat
+    - Reddit
+    - Dropbox
+    - Stripe
+    - Square
+    - PayPal
+    - eBay
+    - Yelp
+    - DoorDash
+    - Instacart
+    - Zoom
+    - Slack
+    - Twilio
+    - Palantir
+    - Snowflake
+    - Databricks
+    - Anthropic
+    - Cohere
+    - Hugging Face
+    - Tesla
+    - Waymo
+    - Cruise
+    
+    # ===== 中国主要互联网公司 =====
+    # 头部大厂
+    - ByteDance
+    - ByteDance Research
+    - Douyin
+    - Toutiao
+    - Alibaba
+    - Alibaba Group
+    - Alibaba Cloud
+    - Taobao
+    - Tmall
+    - Ant Group
+    - Ant Financial
+    - Tencent
+    - WeChat
+    - Weixin
+    - QQ
+    - Baidu
+    - Baidu Research
+    - JD
+    - JD.com
+    - Meituan
+    - Pinduoduo
+    - Kuaishou
+    - Kwai
+    - Huawei
+    - Huawei Cloud
+    - Xiaomi
+    - OPPO
+    - vivo
+    - realme
+    - OnePlus
+    - iQOO
+    
+    # 其他知名公司
+    - NetEase
+    - 163.com
+    - Sina
+    - Weibo
+    - Sohu
+    - Ctrip
+    - Trip.com
+    - Qunar
+    - Zhihu
+    - Bilibili
+    - B站
+    - Ximalaya
+    - Douyu
+    - Huya
+    - YY
+    - Momo
+    - Tantan
+    - Didi
+    - DiDi
+    - Xiaohongshu
+    - RED
+    - 小红书
+    - Zhipu AI
+    - 智谱AI
+    - Baichuan
+    - 百川智能
+    - Moonshot AI
+    - 月之暗面
+    - MiniMax
+    - 01.AI
+    - 零一万物
+    - iFlytek
+    - 科大讯飞
+    - SenseTime
+    - 商汤科技
+    - Megvii
+    - 旷视科技
+    - Yitu
+    - 依图科技
+    - CloudWalk
+    - 云从科技
+    - AutoX
+    - Pony.ai
+    - 小马智行
+    - WeRide
+    - 文远知行
+    - Momenta
+    - TuSimple
+    - 图森未来
 
   # 研究方向关键词（不区分大小写）
   keywords:
